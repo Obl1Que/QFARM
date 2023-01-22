@@ -1,0 +1,8 @@
+{
+  "русский": {
+    "guard_wait": "Steam Guard — Необходима авторизация компьютера"
+  },
+  "english": {
+    "guard_wait": "Steam Guard - Computer Authorization Required"
+  }
+}
