@@ -64,21 +64,6 @@ class Ui_SettingsWindow(object):
         self.labelPathToSteam.setAlignment(QtCore.Qt.AlignCenter)
         self.labelPathToSteam.setObjectName("labelPathToSteam")
 
-        self.langSteamRU = QtWidgets.QPushButton(self.centralwidget)
-        self.langSteamRU.setGeometry(QtCore.QRect(230, 80, 161, 41))
-        self.langSteamRU.setStyleSheet("")
-        self.langSteamRU.setObjectName("langSteamRU")
-
-        self.langSteamEN = QtWidgets.QPushButton(self.centralwidget)
-        self.langSteamEN.setGeometry(QtCore.QRect(410, 80, 171, 41))
-        self.langSteamEN.setStyleSheet("")
-        self.langSteamEN.setObjectName("langSteamEN")
-
-        self.labelLangSteam = QtWidgets.QLabel(self.centralwidget)
-        self.labelLangSteam.setGeometry(QtCore.QRect(20, 80, 191, 41))
-        self.labelLangSteam.setAlignment(QtCore.Qt.AlignCenter)
-        self.labelLangSteam.setObjectName("labelLangSteam")
-
         self.addServersButton = QtWidgets.QPushButton(self.centralwidget)
         self.addServersButton.setGeometry(QtCore.QRect(20, 260, 191, 41))
         self.addServersButton.setStyleSheet("")
@@ -101,7 +86,6 @@ class Ui_SettingsWindow(object):
         QtCore.QMetaObject.connectSlotsByName(SettingsWindow)
 
         self.goMainF()
-        self.ChangeLangF()
         self.ChangePath()
 
     def retranslateUi(self, SettingsWindow):
@@ -109,9 +93,6 @@ class Ui_SettingsWindow(object):
         SettingsWindow.setWindowTitle(_translate("SettingsWindow", "Obl1Que\'s Panel CS:GO"))
         self.gomainwin.setText(_translate("SettingsWindow", "СОХРАНИТЬ НАСТРОЙКИ И ВЫЙТИ"))
         self.labelPathToSteam.setText(_translate("SettingsWindow", "ПУТЬ ДО STEAM:"))
-        self.langSteamRU.setText(_translate("SettingsWindow", "РУССКИЙ"))
-        self.langSteamEN.setText(_translate("SettingsWindow", "ENGLISH"))
-        self.labelLangSteam.setText(_translate("SettingsWindow", "ЯЗЫК КЛИЕНТА STEAM:"))
         self.addServersButton.setText(_translate("SettingsWindow", "ДОБАВИТЬ СЕРВЕР"))
         self.cfgRedactorButton.setText(_translate("SettingsWindow", "РЕДАКТИРОВАТЬ ФАЙЛ КОНФИГА"))
 
@@ -124,16 +105,5 @@ class Ui_SettingsWindow(object):
         file.write(json.dumps(info, indent=4, ensure_ascii=False))
         file.close()
         self.SettingsWindow.close()
-
-    def ChangeLangF(self):
-        self.langSteamRU.clicked.connect(lambda: self.ChangeLang(self.langSteamRU.text()))
-        self.langSteamEN.clicked.connect(lambda: self.ChangeLang(self.langSteamEN.text()))
-    def ChangeLang(self, butText):
-        info = readJson('settings/settings.json')
-        info["steam_language"] = butText.lower()
-        file = open('settings/settings.json', 'w', encoding='utf-8')
-        file.write(json.dumps(info, indent=4, ensure_ascii=False))
-        file.close()
-        print(f'Язык изменён на {butText}')
     def ChangePath(self):
         self.linePathToSteam.setText(readJson("settings/settings.json")["steam_path"])
