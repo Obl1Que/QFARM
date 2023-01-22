@@ -132,7 +132,7 @@ class SteamAccount():
         autoit.send('{Enter}')
 
 def GetSharedSecret(login):
-    dir_name = "./maFiles"
+    dir_name = os.path.abspath("./maFiles")
     for item in os.listdir(dir_name):
         try:
             info = readJson(f'{dir_name}/{item}')
