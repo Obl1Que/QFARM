@@ -36,7 +36,6 @@ class SteamAccount():
         try:
             self.status = 'Starting'
             autoit.run(f'{readJson("settings/settings.json")["steam_path"]} '
-                       f'-noreactlogin '
                        f'-login {self.login} {self.password} '
                        f'-applaunch 730 '
                        f'-low '
@@ -48,10 +47,10 @@ class SteamAccount():
                        f'+exec autoexec.cfg')
 
             if self.steam_lang_guard == None:
-                while autoit.win_exists("Steam Guard — Необходима авторизация компьютера") == 0 and \
+                while autoit.win_exists("Вход в Steam") == 0 and \
                         autoit.win_exists("Steam Guard - Computer Authorization Required") == 0:
                     pass
-                if autoit.win_exists("Steam Guard — Необходима авторизация компьютера"):
+                if autoit.win_exists("Вход в Steam"):
                     self.steam_lang_guard = readJson('settings/steam_lang.json')["русский"]["guard_wait"]
                 elif autoit.win_exists("Steam Guard - Computer Authorization Required"):
                     self.steam_lang_guard = readJson('settings/steam_lang.json')["english"]["guard_wait"]
@@ -60,8 +59,16 @@ class SteamAccount():
             autoit.win_activate(self.steam_lang_guard)
             autoit.win_wait_active(self.steam_lang_guard, 5)
             self.win_steam_PID = autoit.win_get_process(self.steam_lang_guard)
-            autoit.send(self.GuardGen())
-            autoit.send('{Enter}')
+            while autoit.win_exists("Вход в Steam"):
+                try:
+                    autoit.win_activate("Вход в Steam")
+                    autoit.send(self.GuardGen())
+                    autoit.send('{Enter}')
+                    print(f"Try send {self.GuardGen()}...")
+                except:
+                    pass
+                finally:
+                    time.sleep(3)
             print("Guard active")
             autoit.win_wait_close(self.steam_lang_guard)
             print("Waiting CS:GO")
@@ -80,10 +87,6 @@ class SteamAccount():
             self.status = 'Launched'
             self.UpdateAccountsJSON()
             print("Account full launched")
-            # time.sleep(10)
-            # self.ConnectToServer('login', 'password')
-            # self.status = 'Connected'
-            # self.UpdateAccountsJSON()
         except Exception as ex:
             if str(ex) == 'run program failed':
                 print('\nНе правильно указан путь до папки Steam!\nИзмените в настройках.\n')
@@ -119,17 +122,6 @@ class SteamAccount():
         self.win_steam_PID = 0
         self.status = 'Off'
         self.UpdateAccountsJSON()
-    def ConnectToServer(self, ip, password = None):
-        autoit.win_activate(self.win_csgo_title)
-        autoit.win_wait_active(self.win_csgo_title)
-        autoit.send('{`}')
-        time.sleep(0.4)
-        if password:
-            autoit.send(f'connect {ip}; password {password}', 1)
-        else:
-            autoit.send(f'connect {ip}', 1)
-        time.sleep(0.1)
-        autoit.send('{Enter}')
 
 def GetSharedSecret(login):
     dir_name = os.path.abspath("./maFiles")
