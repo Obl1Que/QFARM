@@ -12,7 +12,13 @@ class SteamAccount():
         self.shared_secret = shared_secret
         self.win_csgo_title = f'[{self.login}] # Counter-Strike: Global Offensive - Direct3D 9'
         self.steam_path = readJson('settings/settings.json')["steam_path"]
-        self.steam_lang_guard = None
+
+        if readJson("settings/settings.json")["steam_language"] != "":
+            self.steam_lang = readJson("settings/settings.json")["steam_language"]
+            self.steam_lang_guard = readJson("settings/steam_lang.json")["guard_wait"][self.steam_lang]
+        else:
+            self.steam_lang = None
+
 
         if win_csgo_PID is not None and \
                 win_steam_PID is not None and \
@@ -46,32 +52,42 @@ class SteamAccount():
                        f'-window -w 640 -h 480 '
                        f'+exec autoexec.cfg')
 
-            if self.steam_lang_guard == None:
-                while autoit.win_exists("Вход в Steam") == 0 and \
-                        autoit.win_exists("Steam Guard - Computer Authorization Required") == 0:
+            if self.steam_lang == None:
+                while autoit.win_exists("Вход в Steam") == 0 and autoit.win_exists("Steam Sign In") == 0:
                     pass
                 if autoit.win_exists("Вход в Steam"):
-                    self.steam_lang_guard = readJson('settings/steam_lang.json')["русский"]["guard_wait"]
-                elif autoit.win_exists("Steam Guard - Computer Authorization Required"):
-                    self.steam_lang_guard = readJson('settings/steam_lang.json')["english"]["guard_wait"]
-            print(self.steam_lang_guard)
+                    info = readJson("settings/settings.json")
+                    info["steam_language"] = "русский"
+                    file = open(os.path.abspath("settings/settings.json"), "w", encoding="utf-8")
+                    file.write(json.dumps(info, indent=4))
+                    file.close()
+                    self.steam_lang = "русский"
+                elif autoit.win_exists("Steam Sign In"):
+                    info = readJson("settings/settings.json")
+                    info["steam_language"] = "english"
+                    file = open(os.path.abspath("settings/settings.json"), "w", encoding="utf-8")
+                    file.write(json.dumps(info, indent=4))
+                    file.close()
+                    self.steam_lang = "english"
+                self.steam_lang_guard = readJson('settings/steam_lang.json')["guard_wait"][self.steam_lang]
+            print(f"\033[43m{self.login} starting...\033[0m\n[{self.steam_lang.title()} language]")
             autoit.win_wait(self.steam_lang_guard)
             autoit.win_activate(self.steam_lang_guard)
             autoit.win_wait_active(self.steam_lang_guard, 5)
             self.win_steam_PID = autoit.win_get_process(self.steam_lang_guard)
-            while autoit.win_exists("Вход в Steam"):
+            while autoit.win_exists(self.steam_lang_guard):
                 try:
-                    autoit.win_activate("Вход в Steam")
+                    autoit.win_activate(self.steam_lang_guard)
                     autoit.send(self.GuardGen())
                     autoit.send('{Enter}')
-                    print(f"Try send {self.GuardGen()}...")
+                    print(f"~ Try send {self.GuardGen()}...")
                 except:
                     pass
                 finally:
                     time.sleep(3)
-            print("Guard active")
+            print("+ Guard active")
             autoit.win_wait_close(self.steam_lang_guard)
-            print("Waiting CS:GO")
+            print("~ Waiting CS:GO...")
             autoit.win_wait('Counter-Strike: Global Offensive - Direct3D 9')
             autoit.win_activate('Counter-Strike: Global Offensive - Direct3D 9')
             autoit.win_wait_active('Counter-Strike: Global Offensive - Direct3D 9')
@@ -80,13 +96,13 @@ class SteamAccount():
                 autoit.win_activate('Counter-Strike: Global Offensive - Direct3D 9')
                 autoit.win_wait_active('Counter-Strike: Global Offensive - Direct3D 9')
                 autoit.win_set_title('Counter-Strike: Global Offensive - Direct3D 9', self.win_csgo_title)
-            print("CS:GO renamed")
+            print("+ CS:GO renamed")
             self.MoveWindow(0, 0)
-            print("CS:GO moved")
+            print("+ CS:GO moved")
             self.win_csgo_PID = autoit.win_get_process(self.win_csgo_title)
             self.status = 'Launched'
             self.UpdateAccountsJSON()
-            print("Account full launched")
+            print(f"\033[32m+ Account {self.login} has been launched!\033[0m\n")
         except Exception as ex:
             if str(ex) == 'run program failed':
                 print('\nНе правильно указан путь до папки Steam!\nИзмените в настройках.\n')
@@ -155,12 +171,13 @@ def CreateAccounts():
     file.close()
 
 def readJson(path):
-    file = open(path, encoding='utf-8')
+    file = open(os.path.abspath(path), encoding='utf-8')
     info = json.loads(file.read())
     file.close()
     return info
 
 def OnStart():
+    os.system('CLS')
     info = readJson('launched_accounts.json')
     for account in info.copy():
         if autoit.win_exists(info[account]["win_csgo_title"]) == 1:
