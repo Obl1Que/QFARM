@@ -6,6 +6,7 @@ try:
     if ctypes.windll.shell32.IsUserAnAdmin():
         from mainwindow import *
 
+        os.system('CLS')
         OnStart()
         app = QtWidgets.QApplication(sys.argv)
         app.setWindowIcon(QtGui.QIcon('img/icon.png'))
@@ -25,3 +26,4 @@ try:
 except Exception as ex:
     print(f'QFARM version is - {readJson("settings/settings.json")["version"]}')
     input(f"{ex}")
+    time.sleep(3)
