@@ -1,3 +1,4 @@
+setuptools==58.2.0
 steampy~=0.75
 PyQt5~=5.15.7
 py-win-keyboard-layout==0.2
