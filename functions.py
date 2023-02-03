@@ -178,6 +178,7 @@ def readJson(path):
 
 def OnStart():
     os.system('CLS')
+    NewSettings()
     info = readJson('launched_accounts.json')
     for account in info.copy():
         if autoit.win_exists(info[account]["win_csgo_title"]) == 1:
@@ -187,3 +188,28 @@ def OnStart():
     file = open('launched_accounts.json', 'w', encoding='utf-8')
     file.write(json.dumps(info, indent=4))
     file.close()
+
+def NewSettings():
+    userdata_path = readJson("settings/settings.json")["steam_path"][:-10] + "\\userdata"
+
+    for user in os.listdir(userdata_path):
+        video = open(os.path.abspath("settings/video.txt")).read()
+        videodefaults = open(os.path.abspath("settings/videodefaults.txt")).read()
+        path = userdata_path + "\\" + user + "\\730\\local\\cfg"
+
+        if not os.path.exists(userdata_path + "\\" + user + "\\730\\local\\cfg\\video.txt"):
+            try:
+                os.makedirs(path)
+                open(userdata_path + "\\" + user + "\\730\\local\\cfg\\video.txt", "w")
+                open(userdata_path + "\\" + user + "\\730\\local\\cfg\\videodefaults.txt", "w")
+            except:
+                print(f"\033[32m+ {user}'s dirs has been created!\033[0m")
+            finally:
+                if open(userdata_path + "\\" + user + "\\730\\local\\cfg\\video.txt").read() != video:
+                    new_video = open(userdata_path + "\\" + user + "\\730\\local\\cfg\\video.txt", "w")
+                    new_video.write(video)
+                    new_video.close()
+                    new_videodefaults = open(userdata_path + "\\" + user + "\\730\\local\\cfg\\videodefaults.txt", "w")
+                    new_videodefaults.write(videodefaults)
+                    new_videodefaults.close()
+                    print(f"\033[32m+ {user}'s settings has been loaded!\033[0m")
