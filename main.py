@@ -23,4 +23,5 @@ try:
         py_win_keyboard_layout.change_foreground_window_keyboard_layout(0x04090409)
         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
 except Exception as ex:
+    print(f'QFARM version is - {readJson("settings/settings.json")["version"]}')
     input(f"{ex}")

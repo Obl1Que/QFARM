@@ -100,7 +100,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Obl1Que\'s Panel CS:GO"))
+        MainWindow.setWindowTitle(_translate("MainWindow", f"QFARM v{readJson('settings/settings.json')['version']} | Obl1Que"))
         self.settingsButton.setText(_translate("MainWindow", "НАСТРОЙКИ"))
         self.serversButton.setText(_translate("MainWindow", "СЕРВЕРА"))
         self.windowsButton.setText(_translate("MainWindow", ""))
