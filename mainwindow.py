@@ -205,18 +205,22 @@ class Ui_MainWindow(object):
     def startFarmF(self):
         self.startFarmButton.clicked.connect(lambda: self.startFarm())
     def startFarm(self):
-        self.steamAccounts = []
-        info = readJson('accounts.json')
-        for i in self.itemsToLaunch:
-            for account in info:
-                if i == account:
-                    self.steamAccounts.append(SteamAccount(info[account]["login"], info[account]["password"], info[account]["shared_secret"]))
-        self.itemsToLaunch.clear()
-        for account in self.steamAccounts:
-            account.CSGOLaunch()
+        if readJson("settings/settings.json")["steam_path"] != "":
+            self.steamAccounts = []
+            info = readJson('accounts.json')
+            for i in self.itemsToLaunch:
+                for account in info:
+                    if i == account:
+                        self.steamAccounts.append(SteamAccount(info[account]["login"], info[account]["password"], info[account]["shared_secret"]))
+            self.itemsToLaunch.clear()
+            for account in self.steamAccounts:
+                account.CSGOLaunch()
+                self.checkAccounts()
+                for i in range(self.accountsList.count()):
+                    if account.login == self.accountsList.item(i).text():
+                        self.accountsList.item(i).setBackground(QtGui.QColor(166, 255, 167, 255))
+                        self.logList.addItem(f'+ {account.login} - запущен!')
             self.checkAccounts()
-            for i in range(self.accountsList.count()):
-                if account.login == self.accountsList.item(i).text():
-                    self.accountsList.item(i).setBackground(QtGui.QColor(166, 255, 167, 255))
-                    self.logList.addItem(f'+ {account.login} - запущен!')
-        self.checkAccounts()
+        else:
+            self.LogWrite("- Не возможно начать фарм. Не указан путь до steam.exe")
+            print("\033[31m- Не возможно начать фарм. Не указан путь до steam.exe\033[0m")
