@@ -75,12 +75,12 @@ class SteamAccount():
             autoit.win_activate(self.steam_lang_guard)
             autoit.win_wait_active(self.steam_lang_guard, 5)
             self.win_steam_PID = autoit.win_get_process(self.steam_lang_guard)
+            print(f"~ Trying to send guard code...")
             while autoit.win_exists(self.steam_lang_guard):
                 try:
                     autoit.win_activate(self.steam_lang_guard)
                     autoit.send(self.GuardGen())
                     autoit.send('{Enter}')
-                    print(f"~ Try send {self.GuardGen()}...")
                 except:
                     pass
                 finally:
@@ -177,8 +177,10 @@ def readJson(path):
     return info
 
 def OnStart():
-    os.system('CLS')
-    NewSettings()
+    if readJson("settings/settings.json")["steam_path"] != "":
+        NewSettings()
+    else:
+        print("\033[31m- Укажите в настройках панели путь до steam.exe\033[0m")
     info = readJson('launched_accounts.json')
     for account in info.copy():
         if autoit.win_exists(info[account]["win_csgo_title"]) == 1:
