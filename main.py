@@ -1,16 +1,10 @@
-import ctypes, os, sys, time
-from pyscreeze import unicode
-
-def is_admin():
-    try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
-    except:
-        return False
+import ctypes, os, sys
 
 try:
-    if is_admin():
+    os.system("pip install -r requirements.txt")
+
+    if ctypes.windll.shell32.IsUserAnAdmin():
         from mainwindow import *
-        os.system("pip install -r requirements.txt")
 
         OnStart()
         os.system('CLS')
@@ -26,11 +20,9 @@ try:
         MainWindow.show()
         sys.exit(app.exec_())
     else:
-        if sys.version_info[0] == 3:
-            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
-        else:
-            ctypes.windll.shell32.ShellExecuteW(None, u"runas", unicode(sys.executable), unicode(__file__), None, 1)
-
+        import py_win_keyboard_layout
+        py_win_keyboard_layout.change_foreground_window_keyboard_layout(0x04090409)
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
 except Exception as ex:
     print(f'QFARM version is - {readJson("settings/settings.json")["version"]}')
     input(f"{ex}")
