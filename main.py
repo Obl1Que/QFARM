@@ -26,6 +26,10 @@ try:
         MainWindow.show()
         sys.exit(app.exec_())
     else:
+        import py_win_keyboard_layout
+
+        py_win_keyboard_layout.change_foreground_window_keyboard_layout(0x04090409)
+
         if sys.version_info[0] == 3:
             ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
         else:
