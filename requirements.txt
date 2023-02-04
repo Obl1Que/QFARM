@@ -1,3 +1,4 @@
+PyScreeze==0.1.28
 setuptools==58.2.0
 steampy~=0.75
 PyQt5~=5.15.7
