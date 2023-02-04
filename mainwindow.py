@@ -164,7 +164,8 @@ class Ui_MainWindow(object):
                 if pid.lower() == clItem.text().lower():
                     os.kill(info[pid]["win_csgo_PID"], signal.SIGTERM)
                     os.kill(info[pid]["win_steam_PID"], signal.SIGTERM)
-                    self.LogWrite(f'- {info[pid]["login"]} был выключен.')
+                    self.LogWrite(f'- {info[pid]["login"]} был выключен')
+                    print(f'- {info[pid]["login"]} был выключен')
             clItem.setBackground(QtGui.QColor(0, 0, 0, 0))
             OnStart()
 

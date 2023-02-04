@@ -6,8 +6,8 @@ try:
     if ctypes.windll.shell32.IsUserAnAdmin():
         from mainwindow import *
 
-        os.system('CLS')
         OnStart()
+        os.system('CLS')
         app = QtWidgets.QApplication(sys.argv)
         app.setWindowIcon(QtGui.QIcon('img/icon.png'))
 
