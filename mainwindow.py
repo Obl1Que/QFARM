@@ -37,10 +37,10 @@ class Ui_MainWindow(object):
         self.settingsButton.setStyleSheet("")
         self.settingsButton.setObjectName("settingsButton")
 
-        self.serversButton = QtWidgets.QPushButton(self.centralwidget)
-        self.serversButton.setGeometry(QtCore.QRect(180, 260, 141, 41))
-        self.serversButton.setStyleSheet("")
-        self.serversButton.setObjectName("serversButton")
+        self.optimiseButton = QtWidgets.QPushButton(self.centralwidget)
+        self.optimiseButton.setGeometry(QtCore.QRect(180, 260, 141, 41))
+        self.optimiseButton.setStyleSheet("")
+        self.optimiseButton.setObjectName("optimiseButton")
 
         self.windowsButton = QtWidgets.QPushButton(self.centralwidget)
         self.windowsButton.setGeometry(QtCore.QRect(340, 260, 81, 41))
@@ -89,6 +89,7 @@ class Ui_MainWindow(object):
         self.startFarmF()
         self.ReWindowF()
         self.goSettingsF()
+        self.OptimiseF()
 
     def goSettingsF(self):
         self.settingsButton.clicked.connect(lambda: self.goSettings())
@@ -99,10 +100,17 @@ class Ui_MainWindow(object):
         self.SettingsWindow.show()
 
     def retranslateUi(self, MainWindow):
+        self.need_update = GetActualVersion()
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", f"QFARM v{readJson('settings/settings.json')['version']} | Obl1Que"))
+
+        if self.need_update[0]:
+            print(f"\033[3m\033[32mA NEW VERSION ({self.need_update[1]}) OF THE PANEL IS AVAILABLE FOR DOWNLOAD!\033[0m\n"
+                  f"\033[3m\033[32mFOLLOW THE LINK TO DOWNLOAD: https://github.com/Obl1Que/QFARM\033[0m\n")
+            MainWindow.setWindowTitle(_translate("MainWindow", f"QFARM {readJson('settings/settings.json')['version']} | Obl1Que | NEED UPDATE PANEL TO {self.need_update[1]}"))
+        else:
+            MainWindow.setWindowTitle(_translate("MainWindow", f"QFARM {readJson('settings/settings.json')['version']} | Obl1Que"))
         self.settingsButton.setText(_translate("MainWindow", "НАСТРОЙКИ"))
-        self.serversButton.setText(_translate("MainWindow", "СЕРВЕРА"))
+        self.optimiseButton.setText(_translate("MainWindow", "ОПТИМИЗИРОВАТЬ"))
         self.windowsButton.setText(_translate("MainWindow", ""))
         self.checkAccountsButton.setText(_translate("MainWindow", "ПРОВЕРКА АККАУНТОВ"))
         self.addAccountsButton.setText(_translate("MainWindow", "ДОБАВИТЬ АККАУНТЫ"))
@@ -225,3 +233,12 @@ class Ui_MainWindow(object):
         else:
             self.LogWrite("- Не возможно начать фарм. Не указан путь до steam.exe")
             print("\033[31m- Не возможно начать фарм. Не указан путь до steam.exe\033[0m")
+
+    def OptimiseF(self):
+        self.optimiseButton.clicked.connect(lambda: self.Optimise())
+
+    def Optimise(self):
+        print("Start optimization!")
+        CreateOptomisations()
+        NewSettings()
+        print()
