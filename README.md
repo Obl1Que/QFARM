@@ -1,4 +1,4 @@
-# Obl1Que_Auto_Farm_v2.4.1T
-Panel v2.4.1T
+# QFARM FREE PANEL | Obl1Que v2.4.3T
+v2.4.3T
 
 - Тестовая панель специально для тестировщиков tg @QFARMPANEL
