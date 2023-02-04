@@ -3,6 +3,8 @@ import json
 import signal
 import time
 import autoit
+import requests
+from bs4 import BeautifulSoup
 from steampy.guard import generate_one_time_code
 
 class SteamAccount():
@@ -239,3 +241,47 @@ def NewSettings():
                     new_videodefaults.write(videodefaults)
                     new_videodefaults.close()
                     print(f"\033[32m+ {user}'s settings has been loaded!\033[0m")
+
+def GetActualVersion():
+    url = "https://github.com/Obl1Que/QFARM/blob/master/README.md"
+
+    text = requests.get(url).text
+    soup = BeautifulSoup(text, 'html.parser')
+
+    soup_v = soup.find_all('p')[0].get_text()
+
+    if readJson("settings/settings.json")["version"] == soup_v:
+        return [False]
+    else:
+        return [True, soup_v]
+
+def GetAccountID(userID):
+    url = f"https://steamid.pro/ru/lookup/{userID}"
+
+    text = requests.get(url).text
+    soup = BeautifulSoup(text, 'html.parser')
+
+    account_id = soup.find('img', class_ = "copy").attrs['data-clipboard-text']
+    return account_id
+
+def GetUID(login):
+    dir_name = os.path.abspath("./maFiles")
+    for item in os.listdir(dir_name):
+        try:
+            info = readJson(f'{dir_name}/{item}')
+
+            if login == info["account_name"]:
+                return info["Session"]["SteamID"]
+        except:
+            return None
+
+def CreateOptomisations():
+    accountID_dirs = os.listdir(readJson("settings/settings.json")["steam_path"][:-10] + "\\userdata")
+
+    for account in readJson("accounts.json"):
+        this_acc = GetAccountID(GetUID(account))
+        if this_acc not in accountID_dirs:
+            os.makedirs(readJson("settings/settings.json")["steam_path"][:-10] + f"\\userdata\\{this_acc}")
+            print(f"\033[32m+ {account}'s folder was created!\033[0m")
+        else:
+            print(f"~ {account}'s folder already exists")
