@@ -3,3 +3,5 @@ steampy~=0.75
 PyQt5~=5.15.7
 py-win-keyboard-layout==0.2
 PyAutoIt==0.6.5
+beautifulsoup4==4.11.2
+requests==2.28.2
