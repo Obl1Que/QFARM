@@ -12,6 +12,8 @@ class SteamAccount():
         self.shared_secret = shared_secret
         self.win_csgo_title = f'[{self.login}] # Counter-Strike: Global Offensive - Direct3D 9'
         self.steam_path = readJson('settings/settings.json')["steam_path"]
+        self.will_connected = None
+        self.ip = ''
 
         if readJson("settings/settings.json")["steam_language"] != "":
             self.steam_lang = readJson("settings/settings.json")["steam_language"]
@@ -41,16 +43,33 @@ class SteamAccount():
     def CSGOLaunch(self):
         try:
             self.status = 'Starting'
-            autoit.run(f'{readJson("settings/settings.json")["steam_path"]} '
-                       f'-login {self.login} {self.password} '
-                       f'-applaunch 730 '
-                       f'-low '
-                       f'-nohltv '
-                       f'-no-browser '
-                       f'-novid '
-                       f'-nosound '
-                       f'-window -w 640 -h 480 '
-                       f'+exec autoexec.cfg')
+
+            if readJson("settings/settings.json")["server_log_pass"] == "":
+                self.will_connected = False
+                autoit.run(f'{readJson("settings/settings.json")["steam_path"]} '
+                           f'-login {self.login} {self.password} '
+                           f'-applaunch 730 '
+                           f'-low '
+                           f'-nohltv '
+                           f'-no-browser '
+                           f'-novid '
+                           f'-nosound '
+                           f'-window -w 640 -h 480 '
+                           f'+exec autoexec.cfg')
+            else:
+                self.will_connected = True
+                self.ip = readJson("settings/settings.json")["server_log_pass"]
+                autoit.run(f'{readJson("settings/settings.json")["steam_path"]} '
+                           f'-login {self.login} {self.password} '
+                           f'-applaunch 730 '
+                           f'-low '
+                           f'-nohltv '
+                           f'-no-browser '
+                           f'-novid '
+                           f'-nosound '
+                           f'-window -w 640 -h 480 '
+                           f'+exec autoexec.cfg '
+                           f'+connect {self.ip}')
 
             if self.steam_lang == None:
                 while autoit.win_exists("Вход в Steam") == 0 and autoit.win_exists("Steam Sign In") == 0:
@@ -102,6 +121,8 @@ class SteamAccount():
             self.win_csgo_PID = autoit.win_get_process(self.win_csgo_title)
             self.status = 'Launched'
             self.UpdateAccountsJSON()
+            if self.will_connected == True:
+                print(f"~ Account {self.login} will be connected to {self.ip}")
             print(f"\033[32m+ Account {self.login} has been launched!\033[0m\n")
         except Exception as ex:
             if str(ex) == 'run program failed':
@@ -178,7 +199,10 @@ def readJson(path):
 
 def OnStart():
     if readJson("settings/settings.json")["steam_path"] != "":
-        NewSettings()
+        try:
+            NewSettings()
+        except:
+            print("\033[31m- Укажите путь до файла steam.exe\033[0m")
     else:
         print("\033[31m- Укажите в настройках панели путь до steam.exe\033[0m")
     info = readJson('launched_accounts.json')
