@@ -64,9 +64,9 @@ class Ui_SettingsWindow(object):
         self.labelPathToSteam.setAlignment(QtCore.Qt.AlignCenter)
         self.labelPathToSteam.setObjectName("labelPathToSteam")
 
-        self.addServersButton = QtWidgets.QPushButton(self.centralwidget)
+        self.addServersButton = QtWidgets.QLabel(self.centralwidget)
         self.addServersButton.setGeometry(QtCore.QRect(20, 260, 191, 41))
-        self.addServersButton.setStyleSheet("")
+        self.addServersButton.setAlignment(QtCore.Qt.AlignCenter)
         self.addServersButton.setObjectName("addServersButton")
 
         self.cfgRedactorButton = QtWidgets.QPushButton(self.centralwidget)
@@ -74,7 +74,7 @@ class Ui_SettingsWindow(object):
         self.cfgRedactorButton.setStyleSheet("")
         self.cfgRedactorButton.setObjectName("cfgRedactorButton")
 
-        self.serverLabel = QtWidgets.QLabel(self.centralwidget)
+        self.serverLabel = QtWidgets.QLineEdit(self.centralwidget)
         self.serverLabel.setGeometry(QtCore.QRect(230, 260, 351, 41))
         self.serverLabel.setText("")
         self.serverLabel.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
@@ -101,9 +101,11 @@ class Ui_SettingsWindow(object):
     def goMain(self):
         info = readJson("settings/settings.json")
         info["steam_path"] = self.linePathToSteam.text()
+        info["server_log_pass"] = self.serverLabel.text()
         file = open("settings/settings.json", "w", encoding="utf-8")
         file.write(json.dumps(info, indent=4, ensure_ascii=False))
         file.close()
         self.SettingsWindow.close()
     def ChangePath(self):
         self.linePathToSteam.setText(readJson("settings/settings.json")["steam_path"])
+        self.serverLabel.setText(readJson("settings/settings.json")["server_log_pass"])
