@@ -198,12 +198,13 @@ class Ui_MainWindow(object):
             column = 0
 
             for i in self.steamAccounts:
-                posX = 236 * row
-                posY = 120 * column
+                matsetvideomod = readJson("settings/settings.json")
+                posX = matsetvideomod["win_w"] * row
+                posY = matsetvideomod["win_h"] * column
 
                 i.MoveWindow(posX, posY)
                 row += 1
-                if win_size.width() - 100 < 236 * row:
+                if win_size.width() - matsetvideomod["win_w"] < matsetvideomod["win_w"] * row:
                     row = 0
                     column += 1
         except Exception as ex:
