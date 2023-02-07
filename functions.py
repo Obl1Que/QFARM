@@ -91,12 +91,17 @@ class SteamAccount():
                     file.close()
                     self.steam_lang = "english"
                 self.steam_lang_guard = readJson('settings/steam_lang.json')["guard_wait"][self.steam_lang]
-            print(f"\033[43m{self.login} starting...\033[0m\n[{self.steam_lang.title()} language]")
-            autoit.win_wait(self.steam_lang_guard)
+            print(f"\033[43m{self.login} запуск...\033[0m\n[{self.steam_lang.title()} язык]")
+
+            while autoit.win_exists(self.steam_lang_guard) == 0:
+                pass
+
+            # autoit.win_wait(self.steam_lang_guard)
             autoit.win_activate(self.steam_lang_guard)
             autoit.win_wait_active(self.steam_lang_guard, 5)
             self.win_steam_PID = autoit.win_get_process(self.steam_lang_guard)
-            print(f"~ Trying to send guard code...")
+            print(f"~ Попытка отправить guard code...")
+
             while autoit.win_exists(self.steam_lang_guard):
                 try:
                     autoit.win_activate(self.steam_lang_guard)
@@ -106,29 +111,26 @@ class SteamAccount():
                     pass
                 finally:
                     time.sleep(3)
-            print("+ Guard active")
+            print("+ Guard code успешно введён")
             autoit.win_wait_close(self.steam_lang_guard)
-            print("~ Waiting CS:GO...")
-            autoit.win_wait('Counter-Strike: Global Offensive - Direct3D 9')
-            autoit.win_activate('Counter-Strike: Global Offensive - Direct3D 9')
-            autoit.win_wait_active('Counter-Strike: Global Offensive - Direct3D 9')
+            print("~ Ожидание CS:GO...")
 
             while autoit.win_exists(self.win_csgo_title) == 0:
                 autoit.win_activate('Counter-Strike: Global Offensive - Direct3D 9')
                 autoit.win_wait_active('Counter-Strike: Global Offensive - Direct3D 9')
                 autoit.win_set_title('Counter-Strike: Global Offensive - Direct3D 9', self.win_csgo_title)
-            print("+ CS:GO renamed")
+            print("+ Окно CS:GO переименовано")
             self.MoveWindow(0, 0)
-            print("+ CS:GO moved")
+            print("+ Окно CS:GO перемещено")
             self.win_csgo_PID = autoit.win_get_process(self.win_csgo_title)
             self.status = 'Launched'
             self.UpdateAccountsJSON()
             if self.will_connected == True:
-                print(f"~ Account {self.login} will be connected to {self.ip}")
-            print(f"\033[32m+ Account {self.login} has been launched!\033[0m\n")
+                print(f"~ Аккаунт {self.login} будет подключен к {self.ip}")
+            print(f"\033[32m+ Аккаунт {self.login} успешно запущен!\033[0m\n")
         except Exception as ex:
             if str(ex) == 'run program failed':
-                print('\nНе правильно указан путь до папки Steam!\nИзмените в настройках.\n')
+                print('\nНе правильно указан путь до steam.exe!\nИзмените в настройках.\n')
     def MoveWindow(self, posX, posY):
         autoit.win_activate(self.win_csgo_title)
         autoit.win_move(self.win_csgo_title, posX, posY)
@@ -240,7 +242,7 @@ def NewSettings():
                 open(userdata_path + "\\" + user + "\\730\\local\\cfg\\video.txt", "w")
                 open(userdata_path + "\\" + user + "\\730\\local\\cfg\\videodefaults.txt", "w")
             except:
-                print(f"\033[32m+ {user}'s dirs has been created!\033[0m")
+                print(f"\033[32m+ Папка настроек аккаунта {user} была создана!\033[0m")
             finally:
                 if open(userdata_path + "\\" + user + "\\730\\local\\cfg\\video.txt").read() != video:
                     new_video = open(userdata_path + "\\" + user + "\\730\\local\\cfg\\video.txt", "w")
@@ -249,7 +251,7 @@ def NewSettings():
                     new_videodefaults = open(userdata_path + "\\" + user + "\\730\\local\\cfg\\videodefaults.txt", "w")
                     new_videodefaults.write(videodefaults)
                     new_videodefaults.close()
-                    print(f"\033[32m+ {user}'s settings has been loaded!\033[0m")
+                    print(f"\033[32m+ Настройки аккаунта {user} были загружены!\033[0m")
 
 def GetActualVersion():
     url = "https://github.com/Obl1Que/QFARM/blob/master/README.md"
@@ -293,8 +295,8 @@ def CreateOptomisations():
             this_acc = GetAccountID(GetUID(account))
             if this_acc not in accountID_dirs:
                 os.makedirs(readJson("settings/settings.json")["steam_path"][:-10] + f"\\userdata\\{this_acc}")
-                print(f"\033[32m+ {account}'s folder was created!\033[0m")
+                print(f"\033[32m+ Папка настроек аккаунта {account} была создана!\033[0m")
             else:
-                print(f"~ {account}'s folder already exists")
+                print(f"~ Аккаунт {account} уже имеет папку с настройками!")
         else:
-            print(f"- Account {account} doesn't have maFile!")
+            print(f"- У аккаунта {account} нет maFile'ов!")
