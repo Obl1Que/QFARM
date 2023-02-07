@@ -217,6 +217,15 @@ def OnStart():
     file.write(json.dumps(info, indent=4))
     file.close()
 
+def OnStartPrintInfo():
+    print(f'\033[32mQFARM Panel by Obl1Que {readJson("settings/settings.json")["version"]}\033[0m\n\n'
+          f'Спасибо за использование и тестировку данной бесплатной панели, если вы хотите как-то помочь улучшить панель,\n'
+          f'либо обратиться за помощью, или же просто сказать спасибо - вы всегда можете присоединиться к нашему дружному\n'
+          f'tg каналу @QFARMPANEL!\n\n'
+          f'Github: https://github.com/Obl1Que\n'
+          f'Donate: https://steamcommunity.com/tradeoffer/new/?partner=242071350&token=_u728zwQ\n'
+          f'Feedback: https://zelenka.guru/threads/4559961/\n')
+
 def NewSettings():
     userdata_path = readJson("settings/settings.json")["steam_path"][:-10] + "\\userdata"
 
