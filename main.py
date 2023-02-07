@@ -8,6 +8,7 @@ try:
 
         OnStart()
         os.system('CLS')
+        OnStartPrintInfo()
         app = QtWidgets.QApplication(sys.argv)
         app.setWindowIcon(QtGui.QIcon('img/icon.png'))
 
