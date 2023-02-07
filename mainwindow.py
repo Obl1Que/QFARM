@@ -104,9 +104,9 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
 
         if self.need_update[0]:
-            print(f"\033[3m\033[32mA NEW VERSION ({self.need_update[1]}) OF THE PANEL IS AVAILABLE FOR DOWNLOAD!\033[0m\n"
-                  f"\033[3m\033[32mFOLLOW THE LINK TO DOWNLOAD: https://github.com/Obl1Que/QFARM\033[0m\n")
-            MainWindow.setWindowTitle(_translate("MainWindow", f"QFARM {readJson('settings/settings.json')['version']} | Obl1Que | NEED UPDATE PANEL TO {self.need_update[1]}"))
+            print(f"\033[3m\033[32mДОСТУПНА НОВАЯ ВЕРСИЯ ПАНЕЛИ ({readJson('settings/settings.json')['version']} --> {self.need_update[1]}) ДЛЯ СКАЧИВАНИЯ!\033[0m\n"
+                  f"\033[3m\033[32mПЕРЕХОДИ ПО ССЫЛКЕ ЧТОБЫ СКАЧАТЬ: https://github.com/Obl1Que/QFARM\033[0m\n")
+            MainWindow.setWindowTitle(_translate("MainWindow", f"QFARM {readJson('settings/settings.json')['version']} | Obl1Que | ВОЗМОЖНО ОБНОВЛЕНИЕ ДО {self.need_update[1]}"))
         else:
             MainWindow.setWindowTitle(_translate("MainWindow", f"QFARM {readJson('settings/settings.json')['version']} | Obl1Que"))
         self.settingsButton.setText(_translate("MainWindow", "НАСТРОЙКИ"))
@@ -233,13 +233,13 @@ class Ui_MainWindow(object):
             self.checkAccounts()
         else:
             self.LogWrite("- Не возможно начать фарм. Не указан путь до steam.exe")
-            print("\033[31m- Не возможно начать фарм. Не указан путь до steam.exe\033[0m")
+            print("\033[31m- Не возможно начать фарм. Не указан путь до steam.exe\033[0m\n")
 
     def OptimiseF(self):
         self.optimiseButton.clicked.connect(lambda: self.Optimise())
 
     def Optimise(self):
-        print("Start optimization!")
+        print("Оптимизация видеонастроек была запущена!")
         CreateOptomisations()
         NewSettings()
         print()
