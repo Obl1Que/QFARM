@@ -115,9 +115,11 @@ class SteamAccount():
             print("~ Ожидание CS:GO...")
 
             while autoit.win_exists(self.win_csgo_title) == 0:
+                autoit.win_wait('Counter-Strike: Global Offensive - Direct3D 9')
                 autoit.win_activate('Counter-Strike: Global Offensive - Direct3D 9')
                 autoit.win_wait_active('Counter-Strike: Global Offensive - Direct3D 9')
                 autoit.win_set_title('Counter-Strike: Global Offensive - Direct3D 9', self.win_csgo_title)
+            time.sleep(1)
             print("+ Окно CS:GO переименовано")
             self.MoveWindow(0, 0)
             print("+ Окно CS:GO перемещено")
