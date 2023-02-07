@@ -94,9 +94,8 @@ class SteamAccount():
             while autoit.win_exists(self.steam_lang_guard) == 0:
                 pass
 
-            # autoit.win_wait(self.steam_lang_guard)
             autoit.win_activate(self.steam_lang_guard)
-            autoit.win_wait_active(self.steam_lang_guard, 5)
+            autoit.win_wait_active(self.steam_lang_guard)
             self.win_steam_PID = autoit.win_get_process(self.steam_lang_guard)
             print(f"~ Попытка отправить guard code...")
 
