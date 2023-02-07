@@ -277,11 +277,15 @@ def GetUID(login):
 
 def CreateOptomisations():
     accountID_dirs = os.listdir(readJson("settings/settings.json")["steam_path"][:-10] + "\\userdata")
+    info = readJson("accounts.json")
 
-    for account in readJson("accounts.json"):
-        this_acc = GetAccountID(GetUID(account))
-        if this_acc not in accountID_dirs:
-            os.makedirs(readJson("settings/settings.json")["steam_path"][:-10] + f"\\userdata\\{this_acc}")
-            print(f"\033[32m+ {account}'s folder was created!\033[0m")
+    for account in info:
+        if info[account]["shared_secret"]:
+            this_acc = GetAccountID(GetUID(account))
+            if this_acc not in accountID_dirs:
+                os.makedirs(readJson("settings/settings.json")["steam_path"][:-10] + f"\\userdata\\{this_acc}")
+                print(f"\033[32m+ {account}'s folder was created!\033[0m")
+            else:
+                print(f"~ {account}'s folder already exists")
         else:
-            print(f"~ {account}'s folder already exists")
+            print(f"- Account {account} doesn't have maFile!")
