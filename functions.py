@@ -225,10 +225,16 @@ def OnStart():
     file.close()
 
 def OnStartPrintInfo():
-    print(f'\033[32mQFARM Panel by Obl1Que {readJson("settings/settings.json")["version"]}\033[0m\n\n'
+    actual_version = readJson("settings/settings.json")["version"]
+
+    print(f'\033[32mQFARM Panel by Obl1Que {actual_version}\033[0m\n\n'
           f'Спасибо за использование и тестировку данной бесплатной панели, если вы хотите как-то помочь улучшить панель,\n'
           f'либо обратиться за помощью, или же просто сказать спасибо - вы всегда можете присоединиться к нашему дружному\n'
           f'tg каналу @QFARMPANEL!\n\n'
+          f'\033[33mЧто нового в этой версии панели?\n'
+          f'- Исправление уничтожения процесса steam.exe (ранее, если окно CS:GO было закрыто не через панель, то процесс\n'
+          f'steam.exe продолжал висеть в диспетчере задач и песочнице)\n'
+          f'- Изменём метод вывода информации при запуске панели (теперь выводится вся информация об обновлении панели)\033[0m\n\n'
           f'Github: https://github.com/Obl1Que\n'
           f'Donate: https://steamcommunity.com/tradeoffer/new/?partner=242071350&token=_u728zwQ\n'
           f'Feedback: https://zelenka.guru/threads/4559961/\n')
