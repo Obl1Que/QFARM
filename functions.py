@@ -215,6 +215,10 @@ def OnStart():
         if autoit.win_exists(info[account]["win_csgo_title"]) == 1:
             continue
         else:
+            try:
+                os.kill(info[account]["win_steam_PID"], signal.SIGTERM)
+            except:
+                pass
             info.pop(account)
     file = open('launched_accounts.json', 'w', encoding='utf-8')
     file.write(json.dumps(info, indent=4))
