@@ -264,6 +264,28 @@ def NewSettings():
                     new_videodefaults.close()
                     print(f"\033[32m+ Настройки аккаунта {user} были загружены!\033[0m")
 
+def CreateQFarmexec():
+    try:
+        cfg_path = readJson("settings/settings.json")["steam_path"][:-10] + r"\steamapps\common\Counter-Strike Global Offensive\csgo\cfg"
+        try:
+            exist_cfg = open(cfg_path + r"\qfarm.cfg")
+            exist_cfg_info = exist_cfg.read()
+            cfg_settings = open(os.path.abspath("settings/qfarm.cfg")).read()
+            exist_cfg.close()
+
+            if exist_cfg_info == cfg_settings:
+                print("Файл qfarm.cfg уже существует!\n")
+            else:
+                print("Удалите файл qfarm.cfg и попробуйте снова!\n")
+        except:
+            cfg_settings = open(os.path.abspath("settings/qfarm.cfg")).read()
+            cfg_file = open(cfg_path + r"\qfarm.cfg", "w")
+            cfg_file.write(cfg_settings)
+            cfg_file.close()
+            print("Файл qfarm.cfg создан!\n")
+    except:
+        print("Путь до cfg не содержится в папке Steam!\n")
+
 def GetActualVersion():
     url = "https://github.com/Obl1Que/QFARM/blob/master/README.md"
 
@@ -298,6 +320,7 @@ def GetUID(login):
             return None
 
 def CreateOptomisations():
+    CreateQFarmexec()
     accountID_dirs = os.listdir(readJson("settings/settings.json")["steam_path"][:-10] + "\\userdata")
     info = readJson("accounts.json")
 
