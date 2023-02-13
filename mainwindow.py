@@ -149,6 +149,9 @@ class Ui_MainWindow(object):
             for accountView in range(self.accountsList.count()):
                 if self.accountsList.item(accountView).text() == accountInfo:
                     self.accountsList.item(accountView).setBackground(QtGui.QColor(166, 255, 167, 255))
+
+        print("Проверка аккаунтов завершена!")
+        self.LogWrite("Проверка аккаунтов завершена!")
     def chooseItems(self):
         self.accountsList.itemClicked.connect(self.choosenItems)
     def choosenItems(self, clItem):
