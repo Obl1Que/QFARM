@@ -1,6 +1,7 @@
 {
-    "version": "v2.4.6T",
+    "version": "v2.4.7T",
     "steam_path": "C:\\Program Files (x86)\\Steam\\steam.exe",
+    "csgo_path": "",
     "server_log_pass": "",
     "steam_language": "",
     "win_w": 236,
