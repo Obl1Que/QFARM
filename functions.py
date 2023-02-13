@@ -56,7 +56,7 @@ class SteamAccount():
                            f'-novid '
                            f'-nosound '
                            f'-window -w 640 -h 480 '
-                           f'+exec autoexec.cfg')
+                           f'+exec qfarm.cfg')
             else:
                 self.will_connected = True
                 self.ip = readJson("settings/settings.json")["server_log_pass"]
@@ -68,7 +68,7 @@ class SteamAccount():
                            f'-novid '
                            f'-nosound '
                            f'-window -w 640 -h 480 '
-                           f'+exec autoexec.cfg '
+                           f'+exec qfarm.cfg '
                            f'+connect {self.ip}')
 
             if self.steam_lang == None:
