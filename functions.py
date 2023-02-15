@@ -216,13 +216,6 @@ def readJson(path):
     return info
 
 def OnStart():
-    if readJson("settings/settings.json")["steam_path"] != "":
-        try:
-            NewSettings()
-        except:
-            print("\033[31m- Укажите путь до файла steam.exe\033[0m")
-    else:
-        print("\033[31m- Укажите в настройках панели путь до steam.exe\033[0m")
     info = readJson('launched_accounts.json')
     for account in info.copy():
         if autoit.win_exists(info[account]["win_csgo_title"]) == 1:
