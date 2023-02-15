@@ -195,8 +195,6 @@ class Ui_MainWindow(object):
                 if self.accountsList.item(accountView).text() == accountInfo:
                     self.accountsList.item(accountView).setBackground(QtGui.QColor(166, 255, 167, 255))
 
-        print("Проверка аккаунтов завершена!")
-        self.LogWrite("Проверка аккаунтов завершена!")
     def chooseItems(self):
         self.accountsList.itemClicked.connect(self.choosenItems)
     def choosenItems(self, clItem):
@@ -209,11 +207,6 @@ class Ui_MainWindow(object):
                 self.itemsToLaunch.remove(clItem.text())
                 clItem.setBackground(QtGui.QColor(0, 0, 0, 0))
 
-            if self.itemsToLaunch != []:
-                self.LogWrite(f'Выбрано аккаунтов для запуска: {len(self.itemsToLaunch)}')
-            else:
-                self.LogWrite('Ни одного аккаунта не выбрано!')
-
         elif clItem.background().color().getRgb() == (166, 255, 167, 255):
             info = readJson('launched_accounts.json')
             for pid in info:
@@ -221,7 +214,6 @@ class Ui_MainWindow(object):
                     os.kill(info[pid]["win_csgo_PID"], signal.SIGTERM)
                     os.kill(info[pid]["win_steam_PID"], signal.SIGTERM)
                     self.LogWrite(f'- {info[pid]["login"]} был выключен')
-                    print(f'- {info[pid]["login"]} был выключен')
             clItem.setBackground(QtGui.QColor(0, 0, 0, 0))
             OnStart()
 
