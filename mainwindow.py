@@ -147,8 +147,8 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
 
         if self.need_update[0]:
-            print(f"\033[3m\033[32mДОСТУПНА НОВАЯ ВЕРСИЯ ПАНЕЛИ ({readJson('settings/settings.json')['version']} --> {self.need_update[1]}) ДЛЯ СКАЧИВАНИЯ!\033[0m\n"
-                  f"\033[3m\033[32mПЕРЕХОДИ ПО ССЫЛКЕ ЧТОБЫ СКАЧАТЬ: https://github.com/Obl1Que/QFARM\033[0m\n")
+            self.LogWrite(f"ДОСТУПНА НОВАЯ ВЕРСИЯ ПАНЕЛИ ({readJson('settings/settings.json')['version']} --> {self.need_update[1]}) ДЛЯ СКАЧИВАНИЯ!\n"
+                          f"ПЕРЕХОДИ ПО ССЫЛКЕ ЧТОБЫ СКАЧАТЬ: https://github.com/Obl1Que/QFARM")
             MainWindow.setWindowTitle(_translate("MainWindow", f"QFARM {readJson('settings/settings.json')['version']} | Obl1Que | ВОЗМОЖНО ОБНОВЛЕНИЕ ДО {self.need_update[1]}"))
         else:
             MainWindow.setWindowTitle(_translate("MainWindow", f"QFARM {readJson('settings/settings.json')['version']} | Obl1Que"))
