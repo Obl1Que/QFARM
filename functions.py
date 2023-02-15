@@ -43,7 +43,7 @@ class SteamAccount():
             self.posY = 0
     def GuardGen(self):
         return generate_one_time_code(self.shared_secret)
-    def CSGOLaunch(self):
+    def CSGOLaunch(self, logList):
         try:
             self.status = 'Starting'
 
@@ -247,7 +247,9 @@ def OnStartPrintInfo():
           f'Donate: https://steamcommunity.com/tradeoffer/new/?partner=242071350&token=_u728zwQ\n'
           f'Feedback: https://zelenka.guru/threads/4559961/\n')
 
-def NewSettings():
+def NewSettings(logList):
+    CreateOptomisations(logList)
+
     userdata_path = readJson("settings/settings.json")["steam_path"][:-10] + "\\userdata"
 
     for user in os.listdir(userdata_path):
@@ -272,7 +274,7 @@ def NewSettings():
                     new_videodefaults.close()
                     print(f"\033[32m+ Настройки аккаунта {user} были загружены!\033[0m")
 
-def CreateQFarmexec():
+def CreateQFarmexec(logList):
     try:
         cfg_path = readJson("settings/settings.json")["steam_path"][:-10] + r"\steamapps\common\Counter-Strike Global Offensive\csgo\cfg"
         try:
@@ -327,8 +329,8 @@ def GetUID(login):
         except:
             return None
 
-def CreateOptomisations():
-    CreateQFarmexec()
+def CreateOptomisations(logList):
+    CreateQFarmexec(logList)
     accountID_dirs = os.listdir(readJson("settings/settings.json")["steam_path"][:-10] + "\\userdata")
     info = readJson("accounts.json")
 
