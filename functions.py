@@ -233,20 +233,29 @@ def OnStart():
 def OnStartPrintInfo():
     actual_version = readJson("settings/settings.json")["version"]
 
-    print(f'\033[32mQFARM Panel by Obl1Que {actual_version}\033[0m\n\n'
-          f'Спасибо за использование и тестировку данной бесплатной панели, если вы хотите как-то помочь улучшить панель,\n'
-          f'либо обратиться за помощью, или же просто сказать спасибо - вы всегда можете присоединиться к нашему дружному\n'
-          f'tg каналу @QFARMPANEL!\n\n'
-          f'\033[33mЧто нового в этой версии панели?\n'
-          f'- Обновлена версия панели до v2.4.7T\n'
-          f'- Добавлен для будущих обновлений путь до csgo\n'
-          f'- Добавлен метод автоматического создания qfarm.cfg при нажатии кнопки оптимизации\n'
-          f'- Изменён cfg при запуске CS:GO autoexec.cfg --> qfarm.cfg\n'
-          f'- Добавлена консольное оповещение при нажатии кнопки проверки аккаунтов\n'
-          f'- Переименован файл autoexec.cfg --> qfarm.cfg\033[0m\n\n'
-          f'Github: https://github.com/Obl1Que\n'
-          f'Donate: https://steamcommunity.com/tradeoffer/new/?partner=242071350&token=_u728zwQ\n'
-          f'Feedback: https://zelenka.guru/threads/4559961/\n')
+    return (f'QFARM Panel by Obl1Que {actual_version}\n\n'
+            f'Спасибо за использование и тестировку данной бесплатной панели, если вы хотите как-то помочь улучшить панель,\n'
+            f'либо обратиться за помощью, или же просто сказать спасибо - вы всегда можете присоединиться к нашему дружному\n'
+            f'tg каналу @QFARMPANEL!\n\n'
+            f''
+            f'Что нового в этой версии панели?\n'
+            f'- Исправлен баг текстового вывода\n'
+            f'- Исправлен баг оптимизации запуска аккаунтов\n'
+            f'- Убраны ненужные выводы в консоль\n'
+            f'- Оптимизированы все методы панели для асинхронной работы\n'
+            f'- Добавлены потоки для оптимизации панели - Добавлены потоковые методы StartFarmT(), \nOptimiseT(), ReWindowT(), addMaFilesT(), addAccountsT()\n'
+            f'- Убрано создание папок при запуске панели\n'
+            f'- Убраны ненужные выводы\n'
+            f'- Все print() заменены на logList.addItem() и logList.scrollToBottom()\n'
+            f'- Добавлен параметр logList во многие методы functions.py для вывода информации в консоль панели\n'
+            f'- Ускорен запуск Steam.exe\n'
+            f'- Добавлен параметр -nobrowser при запуске аккаунтов\n'
+            f'- Реализован запуск без консольного окна\n'
+            f'- Обновлена версия панели до 2.5T\n'
+            f'\n\n'
+            f'Github: https://github.com/Obl1Que\n'
+            f'Donate: https://steamcommunity.com/tradeoffer/new/?partner=242071350&token=_u728zwQ\n'
+            f'Feedback: https://zelenka.guru/threads/4559961/\n')
 
 def NewSettings(logList):
     CreateOptomisations(logList)
