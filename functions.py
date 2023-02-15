@@ -129,9 +129,7 @@ class SteamAccount():
                 autoit.win_wait_active('Counter-Strike: Global Offensive - Direct3D 9')
                 autoit.win_set_title('Counter-Strike: Global Offensive - Direct3D 9', self.win_csgo_title)
             time.sleep(1)
-            print("+ Окно CS:GO переименовано")
             self.MoveWindow(0, 0)
-            print("+ Окно CS:GO перемещено")
             self.win_csgo_PID = autoit.win_get_process(self.win_csgo_title)
             self.status = 'Launched'
             self.UpdateAccountsJSON()
