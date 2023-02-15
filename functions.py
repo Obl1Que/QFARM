@@ -92,7 +92,8 @@ class SteamAccount():
                     file.close()
                     self.steam_lang = "english"
                 self.steam_lang_guard = readJson('settings/steam_lang.json')["guard_wait"][self.steam_lang]
-            print(f"\033[43m{self.login} запуск...\033[0m\n[{self.steam_lang.title()} язык]")
+            logList.addItem(f"{self.login} запуск...")
+            logList.scrollToBottom()
 
             while autoit.win_exists(self.steam_lang_guard) == 0:
                 pass
@@ -100,7 +101,8 @@ class SteamAccount():
             autoit.win_activate(self.steam_lang_guard)
             autoit.win_wait_active(self.steam_lang_guard)
             self.win_steam_PID = autoit.win_get_process(self.steam_lang_guard)
-            print(f"~ Попытка отправить guard code...")
+            logList.addItem(f"~ Попытка отправить guard code...")
+            logList.scrollToBottom()
 
             while autoit.win_exists(self.steam_lang_guard):
                 try:
@@ -115,9 +117,11 @@ class SteamAccount():
                     pass
                 finally:
                     time.sleep(3)
-            print("+ Guard code успешно введён")
+            logList.addItem("+ Guard code успешно введён")
+            logList.scrollToBottom()
             autoit.win_wait_close(self.steam_lang_guard)
-            print("~ Ожидание CS:GO...")
+            logList.addItem("~ Ожидание CS:GO...")
+            logList.scrollToBottom()
 
             while autoit.win_exists(self.win_csgo_title) == 0:
                 autoit.win_wait('Counter-Strike: Global Offensive - Direct3D 9')
@@ -132,11 +136,17 @@ class SteamAccount():
             self.status = 'Launched'
             self.UpdateAccountsJSON()
             if self.will_connected == True:
-                print(f"~ Аккаунт {self.login} будет подключен к {self.ip}")
-            print(f"\033[32m+ Аккаунт {self.login} успешно запущен!\033[0m\n")
+                logList.addItem(f"~ Аккаунт {self.login} будет подключен к {self.ip}")
+                logList.scrollToBottom()
+            logList.addItem(f"+ Аккаунт {self.login} успешно запущен!\n")
+            logList.scrollToBottom()
         except Exception as ex:
             if str(ex) == 'run program failed':
-                print('\nНе правильно указан путь до steam.exe!\nИзмените в настройках.\n')
+                logList.addItem("\nНе правильно указан путь до steam.exe!\nИзмените в настройках.\n")
+                logList.scrollToBottom()
+            else:
+                logList.addItem(ex)
+                logList.scrollToBottom()
     def MoveWindow(self, posX, posY):
         autoit.win_activate(self.win_csgo_title)
         autoit.win_move(self.win_csgo_title, posX, posY)
@@ -263,7 +273,8 @@ def NewSettings(logList):
                 open(userdata_path + "\\" + user + "\\730\\local\\cfg\\video.txt", "w")
                 open(userdata_path + "\\" + user + "\\730\\local\\cfg\\videodefaults.txt", "w")
             except:
-                print(f"\033[32m+ Папка настроек аккаунта {user} была создана!\033[0m")
+                logList.addItem(f"+ Папка настроек аккаунта {user} была создана!")
+                logList.scrollToBottom()
             finally:
                 if open(userdata_path + "\\" + user + "\\730\\local\\cfg\\video.txt").read() != video:
                     new_video = open(userdata_path + "\\" + user + "\\730\\local\\cfg\\video.txt", "w")
@@ -272,7 +283,8 @@ def NewSettings(logList):
                     new_videodefaults = open(userdata_path + "\\" + user + "\\730\\local\\cfg\\videodefaults.txt", "w")
                     new_videodefaults.write(videodefaults)
                     new_videodefaults.close()
-                    print(f"\033[32m+ Настройки аккаунта {user} были загружены!\033[0m")
+                    logList.addItem(f"+ Настройки аккаунта {user} были загружены!")
+                    logList.scrollToBottom()
 
 def CreateQFarmexec(logList):
     try:
@@ -284,17 +296,21 @@ def CreateQFarmexec(logList):
             exist_cfg.close()
 
             if exist_cfg_info == cfg_settings:
-                print("Файл qfarm.cfg уже существует!\n")
+                logList.addItem("Файл qfarm.cfg уже существует!\n")
+                logList.scrollToBottom()
             else:
-                print("Удалите файл qfarm.cfg и попробуйте снова!\n")
+                logList.addItem("Удалите файл qfarm.cfg и попробуйте снова!\n")
+                logList.scrollToBottom()
         except:
             cfg_settings = open(os.path.abspath("settings/qfarm.cfg")).read()
             cfg_file = open(cfg_path + r"\qfarm.cfg", "w")
             cfg_file.write(cfg_settings)
             cfg_file.close()
-            print("Файл qfarm.cfg создан!\n")
+            logList.addItem("Файл qfarm.cfg создан!\n")
+            logList.scrollToBottom()
     except:
-        print("Путь до cfg не содержится в папке Steam!\n")
+        logList.addItem("Путь до cfg не содержится в папке Steam!\n")
+        logList.scrollToBottom()
 
 def GetActualVersion():
     url = "https://github.com/Obl1Que/QFARM/blob/master/README.md"
@@ -339,8 +355,11 @@ def CreateOptomisations(logList):
             this_acc = GetAccountID(GetUID(account))
             if this_acc not in accountID_dirs:
                 os.makedirs(readJson("settings/settings.json")["steam_path"][:-10] + f"\\userdata\\{this_acc}")
-                print(f"\033[32m+ Папка настроек аккаунта {account} была создана!\033[0m")
+                logList.addItem(f"\033[32m+ Папка настроек аккаунта {account} была создана!\033[0m")
+                logList.scrollToBottom()
             else:
-                print(f"~ Аккаунт {account} уже имеет папку с настройками!")
+                logList.addItem(f"~ Аккаунт {account} уже имеет папку с настройками!")
+                logList.scrollToBottom()
         else:
-            print(f"- У аккаунта {account} нет maFile'ов!")
+            logList.addItem(f"- У аккаунта {account} нет maFile'ов!")
+            logList.scrollToBottom()
