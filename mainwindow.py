@@ -161,11 +161,13 @@ class Ui_MainWindow(object):
         self.startFarmButton.setText(_translate("MainWindow", "НАЧАТЬ ФАРМ"))
 
     def addAccountsF(self):
-        self.addAccountsButton.clicked.connect(lambda: self.addAccounts())
+        self.addAccountsButton.clicked.connect(lambda: self.addAccountsT())
     def addAccounts(self):
-        os.system('logpass.txt')
+        self.add_acc_stat = True
+        os.system(os.path.abspath('logpass.txt'))
+        self.add_acc_stat = False
     def addMaFilesF(self):
-        self.addMaFilesButton.clicked.connect(lambda: self.addMaFiles())
+        self.addMaFilesButton.clicked.connect(lambda: self.addMaFilesT())
     def addMaFiles(self):
         path = os.path.abspath('maFiles')
         autoit.run(f'explorer.exe {os.path.abspath(path)}')
@@ -225,8 +227,9 @@ class Ui_MainWindow(object):
 
         self.accountsList.clearSelection()
     def ReWindowF(self):
-        self.windowsButton.clicked.connect(lambda: self.ReWindow())
+        self.windowsButton.clicked.connect(lambda: self.ReWindowT())
     def ReWindow(self):
+        self.rew_stat = True
         self.steamAccounts = []
         info = readJson('launched_accounts.json')
         for i in info:
@@ -254,38 +257,46 @@ class Ui_MainWindow(object):
                     row = 0
                     column += 1
         except Exception as ex:
-            print(ex)
+            self.LogWrite(ex)
+        self.rew_stat = False
     def LogWrite(self, sentense):
         self.logList.addItem(sentense)
         self.logList.scrollToBottom()
     def startFarmF(self):
-        self.startFarmButton.clicked.connect(lambda: self.startFarm())
+        self.startFarmButton.clicked.connect(lambda: self.StartFarmT())
     def startFarm(self):
-        if readJson("settings/settings.json")["steam_path"] != "":
-            self.steamAccounts = []
-            info = readJson('accounts.json')
-            for i in self.itemsToLaunch:
-                for account in info:
-                    if i == account:
-                        self.steamAccounts.append(SteamAccount(info[account]["login"], info[account]["password"], info[account]["shared_secret"]))
-            self.itemsToLaunch.clear()
-            for account in self.steamAccounts:
-                account.CSGOLaunch()
+        self.start_stat = True
+        this_itemsToLaunch = self.itemsToLaunch
+        thCh = threading.Thread(target=self.checkAccounts, daemon=True)
+        thCh.start()
+        if this_itemsToLaunch != []:
+            if readJson("settings/settings.json")["steam_path"] != "":
+                self.steamAccounts = []
+                info = readJson('accounts.json')
+                for i in this_itemsToLaunch:
+                    for account in info:
+                        if i == account:
+                            self.steamAccounts.append(SteamAccount(info[account]["login"], info[account]["password"], info[account]["shared_secret"]))
+                this_itemsToLaunch.clear()
+                for account in self.steamAccounts:
+                    account.CSGOLaunch(self.logList)
+                    self.checkAccounts()
+
+                    for i in range(self.accountsList.count()):
+                        if account.login == self.accountsList.item(i).text():
+                            self.accountsList.item(i).setBackground(QtGui.QColor(166, 255, 167, 255))
                 self.checkAccounts()
-                for i in range(self.accountsList.count()):
-                    if account.login == self.accountsList.item(i).text():
-                        self.accountsList.item(i).setBackground(QtGui.QColor(166, 255, 167, 255))
-                        self.logList.addItem(f'+ {account.login} - запущен!')
-            self.checkAccounts()
+            else:
+                self.LogWrite("\033[31m- Не возможно начать фарм. Не указан путь до steam.exe\033[0m\n")
         else:
-            self.LogWrite("- Не возможно начать фарм. Не указан путь до steam.exe")
-            print("\033[31m- Не возможно начать фарм. Не указан путь до steam.exe\033[0m\n")
+            self.LogWrite("Выберите аккаунты для запуска!")
+        self.start_stat = False
 
     def OptimiseF(self):
-        self.optimiseButton.clicked.connect(lambda: self.Optimise())
+        self.optimiseButton.clicked.connect(lambda: self.OptimiseT())
 
     def Optimise(self):
-        print("Оптимизация видеонастроек была запущена!")
-        CreateOptomisations()
-        NewSettings()
-        print()
+        self.opt_stat = True
+        self.LogWrite("Оптимизация видеонастроек была запущена!")
+        NewSettings(self.logList)
+        self.opt_stat = False
