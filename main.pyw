@@ -8,7 +8,6 @@ try:
 
         OnStart()
         os.system('CLS')
-        OnStartPrintInfo()
         app = QtWidgets.QApplication(sys.argv)
         app.setWindowIcon(QtGui.QIcon('img/icon.png'))
 
@@ -26,5 +25,5 @@ try:
         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
 except Exception as ex:
     print(f'QFARM {readJson("settings/settings.json")["version"]}')
-    input(f"{ex}")
+    input(ex)
     time.sleep(3)
