@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDesktopWidget
 from functions import *
 from settingswindow import Ui_SettingsWindow
+import threading
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -91,6 +92,48 @@ class Ui_MainWindow(object):
         self.goSettingsF()
         self.OptimiseF()
 
+        self.LogWrite(OnStartPrintInfo())
+        self.opt_stat = False
+        self.rew_stat = False
+        self.start_stat = False
+        self.add_acc_stat = False
+
+    def StartFarmT(self):
+        try:
+            if self.start_stat == False:
+                t1 = threading.Thread(target=self.startFarm, daemon=True)
+                t1.start()
+            else:
+                thCh = threading.Thread(target=self.checkAccounts, daemon=True)
+                thCh.start()
+                self.LogWrite("Панель уже запускает аккаунты!")
+        except:
+            t1 = threading.Thread(target=self.startFarm, daemon=True)
+            t1.start()
+    def OptimiseT(self):
+        if self.opt_stat == False:
+            t2 = threading.Thread(target=self.Optimise, daemon=True)
+            t2.start()
+        else:
+            self.LogWrite("Панель уже оптимизирует аккаунты!")
+
+    def ReWindowT(self):
+        if self.rew_stat == False:
+            t2 = threading.Thread(target=self.ReWindow, daemon=True)
+            t2.start()
+        else:
+            self.LogWrite("Панель уже перемещает аккаунты!")
+
+    def addMaFilesT(self):
+        th = threading.Thread(target=self.addMaFiles, daemon=True)
+        th.start()
+
+    def addAccountsT(self):
+        if self.add_acc_stat == False:
+            th = threading.Thread(target=self.addAccounts, daemon=True)
+            th.start()
+        else:
+            self.LogWrite("Файл logpass.txt уже запущен!")
     def goSettingsF(self):
         self.settingsButton.clicked.connect(lambda: self.goSettings())
     def goSettings(self):
