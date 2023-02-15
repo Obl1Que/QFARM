@@ -1,4 +1,4 @@
-# QFARM FREE PANEL | Obl1Que v2.4.7T
-v2.4.7T
+# QFARM FREE PANEL | Obl1Que v2.5T
+v2.5T
 
 - Тестовая панель специально для тестировщиков tg @QFARMPANEL
