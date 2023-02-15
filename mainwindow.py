@@ -176,7 +176,7 @@ class Ui_MainWindow(object):
     def checkAccounts(self):
         OnStart()
         CreateAccounts()
-        self.itemsToLaunch.clear()
+        self.itemsToLaunch = []
         self.accountsList.clear()
 
         info = readJson('accounts.json')
