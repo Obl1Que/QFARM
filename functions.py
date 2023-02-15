@@ -4,6 +4,7 @@ import signal
 import time
 import autoit
 import requests
+import py_win_keyboard_layout
 from bs4 import BeautifulSoup
 from steampy.guard import generate_one_time_code
 
@@ -103,10 +104,12 @@ class SteamAccount():
 
             while autoit.win_exists(self.steam_lang_guard):
                 try:
+                    time.sleep(3)
                     autoit.win_activate(self.steam_lang_guard)
                     for i in range(5):
                         autoit.send('{BACKSPACE}')
                     autoit.send(self.GuardGen())
+                    py_win_keyboard_layout.change_foreground_window_keyboard_layout(0x04090409)
                     autoit.send('{Enter}')
                 except:
                     pass
