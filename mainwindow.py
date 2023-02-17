@@ -96,6 +96,7 @@ class Ui_MainWindow(object):
         self.ReWindowF()
         self.goSettingsF()
         self.OptimiseF()
+        self.chooseAllItems()
 
         self.LogWrite(OnStartPrintInfo())
         self.opt_stat = False
@@ -201,6 +202,18 @@ class Ui_MainWindow(object):
                 if self.accountsList.item(accountView).text() == accountInfo:
                     self.accountsList.item(accountView).setBackground(QtGui.QColor(166, 255, 167, 255))
 
+    def chooseAllItems(self):
+        self.allAccountsButton.clicked.connect(lambda: self.chooseAllItemsF())
+
+    def chooseAllItemsF(self):
+        self.itemsToLaunch = []
+
+        for account in range(self.accountsList.count()):
+            if self.accountsList.item(account).background().color().getRgb() != (255, 166, 166, 255) and self.accountsList.item(account).background().color().getRgb() != (166, 255, 167, 255):
+                self.itemsToLaunch.append(self.accountsList.item(account).text())
+                self.accountsList.item(account).setBackground(QtGui.QColor(235, 242, 255, 150))
+
+        self.LogWrite(f"Выбраны все возможные аккаунты для запуска ({len(self.itemsToLaunch)})")
     def chooseItems(self):
         self.accountsList.itemClicked.connect(self.choosenItems)
     def choosenItems(self, clItem):
@@ -222,7 +235,6 @@ class Ui_MainWindow(object):
                     self.LogWrite(f'- {info[pid]["login"]} был выключен')
             clItem.setBackground(QtGui.QColor(0, 0, 0, 0))
             OnStart()
-
         self.accountsList.clearSelection()
     def ReWindowF(self):
         self.windowsButton.clicked.connect(lambda: self.ReWindowT())
