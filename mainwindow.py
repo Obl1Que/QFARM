@@ -99,6 +99,7 @@ class Ui_MainWindow(object):
         self.chooseAllItems()
 
         self.LogWrite(OnStartPrintInfo())
+        self.itemsToLaunch = []
         self.opt_stat = False
         self.rew_stat = False
         self.start_stat = False
