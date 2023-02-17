@@ -51,9 +51,14 @@ class Ui_MainWindow(object):
         self.windowsButton.setIconSize(QtCore.QSize(20, 20))
 
         self.checkAccountsButton = QtWidgets.QPushButton(self.centralwidget)
-        self.checkAccountsButton.setGeometry(QtCore.QRect(20, 20, 401, 41))
+        self.checkAccountsButton.setGeometry(QtCore.QRect(20, 20, 280, 41))
         self.checkAccountsButton.setStyleSheet("")
         self.checkAccountsButton.setObjectName("checkAccountsButton")
+
+        self.allAccountsButton = QtWidgets.QPushButton(self.centralwidget)
+        self.allAccountsButton.setGeometry(QtCore.QRect(320, 20, 101, 41))
+        self.allAccountsButton.setStyleSheet("")
+        self.allAccountsButton.setObjectName("allAccountsButton")
 
         self.addAccountsButton = QtWidgets.QPushButton(self.centralwidget)
         self.addAccountsButton.setGeometry(QtCore.QRect(20, 80, 401, 41))
@@ -155,6 +160,7 @@ class Ui_MainWindow(object):
         self.settingsButton.setText(_translate("MainWindow", "НАСТРОЙКИ"))
         self.optimiseButton.setText(_translate("MainWindow", "ОПТИМИЗИРОВАТЬ"))
         self.windowsButton.setText(_translate("MainWindow", ""))
+        self.allAccountsButton.setText(_translate("MainWindow", "ВЫБРАТЬ ВСЕ"))
         self.checkAccountsButton.setText(_translate("MainWindow", "ПРОВЕРКА АККАУНТОВ"))
         self.addAccountsButton.setText(_translate("MainWindow", "ДОБАВИТЬ АККАУНТЫ"))
         self.addMaFilesButton.setText(_translate("MainWindow", "ДОБАВИТЬ MAFILE"))
