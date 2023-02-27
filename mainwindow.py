@@ -104,6 +104,7 @@ class Ui_MainWindow(object):
         self.rew_stat = False
         self.start_stat = False
         self.add_acc_stat = False
+        self.all_accs_choosen = False
 
     def StartFarmT(self):
         try:
@@ -207,14 +208,22 @@ class Ui_MainWindow(object):
         self.allAccountsButton.clicked.connect(lambda: self.chooseAllItemsF())
 
     def chooseAllItemsF(self):
-        self.itemsToLaunch = []
+        if not self.all_accs_choosen:
+            self.itemsToLaunch = []
+            self.all_accs_choosen = True
 
-        for account in range(self.accountsList.count()):
-            if self.accountsList.item(account).background().color().getRgb() != (255, 166, 166, 255) and self.accountsList.item(account).background().color().getRgb() != (166, 255, 167, 255):
-                self.itemsToLaunch.append(self.accountsList.item(account).text())
-                self.accountsList.item(account).setBackground(QtGui.QColor(235, 242, 255, 150))
+            for account in range(self.accountsList.count()):
+                if self.accountsList.item(account).background().color().getRgb() != (255, 166, 166, 255) and self.accountsList.item(account).background().color().getRgb() != (166, 255, 167, 255):
+                    self.itemsToLaunch.append(self.accountsList.item(account).text())
+                    self.accountsList.item(account).setBackground(QtGui.QColor(235, 242, 255, 150))
+
+        else:
+            self.all_accs_choosen = False
+            self.itemsToLaunch = []
+            self.checkAccounts()
 
         self.LogWrite(f"Выбраны все возможные аккаунты для запуска ({len(self.itemsToLaunch)})")
+
     def chooseItems(self):
         self.accountsList.itemClicked.connect(self.choosenItems)
     def choosenItems(self, clItem):
