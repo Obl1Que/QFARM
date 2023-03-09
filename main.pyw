@@ -3,6 +3,9 @@ import ctypes, os, sys
 try:
     os.system("pip install -r requirements.txt")
 
+    if not os.path.exists('accounts/pack'):
+        os.makedirs('accounts/pack')
+
     if ctypes.windll.shell32.IsUserAnAdmin():
         from mainwindow import *
 

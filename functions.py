@@ -188,32 +188,27 @@ def GetSharedSecret(login):
         except:
             return None
 
-def ParceLogPass():
+def ParceLogPass(file):
     accounts = {}
-    file = open('logpass.txt')
-
-    for account in file:
-        if account != '\n':
-            account_pair = account.split(':')
-            accounts[account_pair[0].lower()] = {'login': account_pair[0].lower(),
-                                                 'password': account_pair[1].replace('\n', '')}
-    file.close()
+    with open(file) as file:
+        for account in file:
+            if account != '\n':
+                account_pair = account.split(':')
+                accounts[account_pair[0].lower()] = {'login': account_pair[0].lower(),
+                                                    'password': account_pair[1].replace('\n', '')}
     return accounts
 
-def CreateAccounts():
-    accounts = ParceLogPass()
+def CreateAccounts(file):
+    accounts = ParceLogPass(file)
     for login in accounts:
         accounts[login]['shared_secret'] = GetSharedSecret(login)
-
-    file = open('accounts.json', 'w', encoding='utf-8')
-    file.write(json.dumps(accounts, indent=4))
-    file.close()
+    with open('accounts.json', 'w', encoding='utf-8') as file:
+        file.write(json.dumps(accounts, indent=4))
 
 def readJson(path):
-    file = open(os.path.abspath(path), encoding='utf-8')
-    info = json.loads(file.read())
-    file.close()
-    return info
+    with open(os.path.abspath(path), encoding='utf-8') as file:
+        info = json.loads(file.read())
+        return info
 
 def OnStart():
     info = readJson('launched_accounts.json')
