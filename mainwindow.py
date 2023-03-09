@@ -1,11 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QDesktopWidget
+from PyQt5.QtWidgets import QDesktopWidget, QFileDialog
 from functions import *
 from settingswindow import Ui_SettingsWindow
 import threading
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        self.file_path = 'accounts/logpass.txt'
         self.itemsToLaunch = []
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -118,6 +119,7 @@ class Ui_MainWindow(object):
         except:
             t1 = threading.Thread(target=self.startFarm, daemon=True)
             t1.start()
+    
     def OptimiseT(self):
         if self.opt_stat == False:
             t2 = threading.Thread(target=self.Optimise, daemon=True)
@@ -136,12 +138,6 @@ class Ui_MainWindow(object):
         th = threading.Thread(target=self.addMaFiles, daemon=True)
         th.start()
 
-    def addAccountsT(self):
-        if self.add_acc_stat == False:
-            th = threading.Thread(target=self.addAccounts, daemon=True)
-            th.start()
-        else:
-            self.LogWrite("Файл logpass.txt уже запущен!")
     def goSettingsF(self):
         self.settingsButton.clicked.connect(lambda: self.goSettings())
     def goSettings(self):
@@ -170,11 +166,20 @@ class Ui_MainWindow(object):
         self.startFarmButton.setText(_translate("MainWindow", "НАЧАТЬ ФАРМ"))
 
     def addAccountsF(self):
-        self.addAccountsButton.clicked.connect(lambda: self.addAccountsT())
+        self.addAccountsButton.clicked.connect(lambda: self.addAccounts())
+    
     def addAccounts(self):
         self.add_acc_stat = True
-        os.system(os.path.abspath('logpass.txt'))
+        file_dialog = QFileDialog()
+        file_dialog.setDirectory("/accounts/pack")
+        file_dialog.setFileMode(QFileDialog.ExistingFile)
+        if file_dialog.exec_() == QFileDialog.Accepted:
+            selected_file_path = file_dialog.selectedFiles()[0]
+            self.file_path = selected_file_path
+        else:
+            return None
         self.add_acc_stat = False
+   
     def addMaFilesF(self):
         self.addMaFilesButton.clicked.connect(lambda: self.addMaFilesT())
     def addMaFiles(self):
@@ -184,7 +189,7 @@ class Ui_MainWindow(object):
         self.checkAccountsButton.clicked.connect(lambda: self.checkAccounts())
     def checkAccounts(self):
         OnStart()
-        CreateAccounts()
+        CreateAccounts(self.file_path)
         self.itemsToLaunch = []
         self.accountsList.clear()
 
