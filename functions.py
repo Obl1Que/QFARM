@@ -116,7 +116,7 @@ class SteamAccount():
 
             while autoit.win_exists(self.steam_lang_guard):
                 try:
-                    time.sleep(3)
+                    time.sleep(5)
                     autoit.win_activate(self.steam_lang_guard)
                     for i in range(5):
                         autoit.send('{BACKSPACE}')
