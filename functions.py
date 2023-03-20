@@ -192,11 +192,13 @@ def GetSharedSecret(login):
     dir_name = os.path.abspath("./maFiles")
     for item in os.listdir(dir_name):
         try:
-            info = readJson(f'{dir_name}/{item}')
-            if info['account_name'].lower() == login:
-                return info['shared_secret']
-        except:
-            return None
+            with open(f'{dir_name}/{item}', 'r') as f:
+                info = json.load(f)
+                if info['account_name'].lower() == login:
+                    return info['shared_secret']
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+    return None
 
 def ParceLogPass():
     accounts = {}
