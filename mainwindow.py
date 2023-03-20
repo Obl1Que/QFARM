@@ -118,12 +118,6 @@ class Ui_MainWindow(object):
         except:
             t1 = threading.Thread(target=self.startFarm, daemon=True)
             t1.start()
-    def OptimiseT(self):
-        if self.opt_stat == False:
-            t2 = threading.Thread(target=self.Optimise, daemon=True)
-            t2.start()
-        else:
-            self.LogWrite("Панель уже оптимизирует аккаунты!")
 
     def ReWindowT(self):
         if self.rew_stat == False:
@@ -313,7 +307,7 @@ class Ui_MainWindow(object):
         self.start_stat = False
 
     def OptimiseF(self):
-        self.optimiseButton.clicked.connect(lambda: self.OptimiseT())
+        self.optimiseButton.clicked.connect(lambda: self.Optimise())
 
     def Optimise(self):
         self.opt_stat = True
