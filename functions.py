@@ -324,7 +324,9 @@ def GetUID(login):
                 return info["Session"]["SteamID"]
         except:
             return None
-
+def commid_to_steamid(commid):
+    steamid64ident = 76561197960265728
+    return commid - steamid64ident
 def CreateOptomisations(logList):
     CreateQFarmexec(logList)
     accountID_dirs = os.listdir(readJson("settings/settings.json")["steam_path"][:-10] + "\\userdata")
