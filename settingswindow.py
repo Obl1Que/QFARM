@@ -59,10 +59,20 @@ class Ui_SettingsWindow(object):
         self.linePathToSteam.setText("")
         self.linePathToSteam.setObjectName("linePathToSteam")
 
+        self.linePathToCSGO = QtWidgets.QLineEdit(self.centralwidget)
+        self.linePathToCSGO.setGeometry(QtCore.QRect(230, 80, 351, 41))
+        self.linePathToCSGO.setText("")
+        self.linePathToCSGO.setObjectName("linePathToCSGO")
+
         self.labelPathToSteam = QtWidgets.QLabel(self.centralwidget)
         self.labelPathToSteam.setGeometry(QtCore.QRect(20, 140, 191, 41))
         self.labelPathToSteam.setAlignment(QtCore.Qt.AlignCenter)
         self.labelPathToSteam.setObjectName("labelPathToSteam")
+
+        self.labelPathToCSGO = QtWidgets.QLabel(self.centralwidget)
+        self.labelPathToCSGO.setGeometry(QtCore.QRect(20, 80, 191, 41))
+        self.labelPathToCSGO.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelPathToCSGO.setObjectName("labelPathToCSGO")
 
         self.addServersButton = QtWidgets.QLabel(self.centralwidget)
         self.addServersButton.setGeometry(QtCore.QRect(20, 260, 191, 41))
@@ -87,12 +97,14 @@ class Ui_SettingsWindow(object):
 
         self.goMainF()
         self.ChangePath()
+        self.ExecConfigure()
 
     def retranslateUi(self, SettingsWindow):
         _translate = QtCore.QCoreApplication.translate
         SettingsWindow.setWindowTitle(_translate("SettingsWindow", "Obl1Que\'s Panel CS:GO"))
         self.gomainwin.setText(_translate("SettingsWindow", "СОХРАНИТЬ НАСТРОЙКИ И ВЫЙТИ"))
         self.labelPathToSteam.setText(_translate("SettingsWindow", "ПУТЬ ДО STEAM:"))
+        self.labelPathToCSGO.setText(_translate("SettingsWindow", "ПУТЬ ДО CSGO:"))
         self.addServersButton.setText(_translate("SettingsWindow", "ДОБАВИТЬ СЕРВЕР"))
         self.cfgRedactorButton.setText(_translate("SettingsWindow", "РЕДАКТИРОВАТЬ ФАЙЛ КОНФИГА"))
 
@@ -101,6 +113,7 @@ class Ui_SettingsWindow(object):
     def goMain(self):
         info = readJson("settings/settings.json")
         info["steam_path"] = self.linePathToSteam.text()
+        info["csgo_path"] = self.linePathToCSGO.text()
         info["server_log_pass"] = self.serverLabel.text()
         file = open("settings/settings.json", "w", encoding="utf-8")
         file.write(json.dumps(info, indent=4, ensure_ascii=False))
@@ -108,4 +121,12 @@ class Ui_SettingsWindow(object):
         self.SettingsWindow.close()
     def ChangePath(self):
         self.linePathToSteam.setText(readJson("settings/settings.json")["steam_path"])
+        self.linePathToCSGO.setText(readJson("settings/settings.json")["csgo_path"])
         self.serverLabel.setText(readJson("settings/settings.json")["server_log_pass"])
+
+    def ExecConfigure(self):
+        self.cfgRedactorButton.clicked.connect(lambda: self.ExecConfigureF())
+
+    def ExecConfigureF(self):
+        path_to_cfg = os.path.abspath("settings/qfarm.cfg")
+        os.system(path_to_cfg)
