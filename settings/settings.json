@@ -1,7 +1,7 @@
 {
-    "version": "v2.5.2T",
+    "version": "v2.5.3T",
     "steam_path": "C:\\Program Files (x86)\\Steam\\steam.exe",
-    "csgo_path": "",
+    "csgo_path": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Global Offensive",
     "server_log_pass": "",
     "steam_language": "",
     "win_w": 236,
