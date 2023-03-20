@@ -225,18 +225,21 @@ def readJson(path):
 
 def OnStart():
     info = readJson('launched_accounts.json')
-    for account in info.copy():
-        if autoit.win_exists(info[account]["win_csgo_title"]) == 1:
+    to_remove = []
+    for account, details in info.items():
+        if autoit.win_exists(details["win_csgo_title"]):
             continue
         else:
             try:
-                os.kill(info[account]["win_steam_PID"], signal.SIGTERM)
-            except:
+                os.kill(details["win_steam_PID"], signal.SIGTERM)
+            except OSError:
                 pass
-            info.pop(account)
-    file = open('launched_accounts.json', 'w', encoding='utf-8')
-    file.write(json.dumps(info, indent=4))
-    file.close()
+            to_remove.append(account)
+    for account in to_remove:
+        info.pop(account)
+    with open('launched_accounts.json', 'w', encoding='utf-8') as file:
+        json.dump(info, file, indent=4)
+
 
 def OnStartPrintInfo():
     actual_version = readJson("settings/settings.json")["version"]
