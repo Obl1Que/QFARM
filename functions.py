@@ -334,12 +334,13 @@ def CreateOptomisations(logList):
 
     for account in info:
         if info[account]["shared_secret"]:
-            this_acc = GetAccountID(GetUID(account))
-            if this_acc not in accountID_dirs:
-                os.makedirs(readJson("settings/settings.json")["steam_path"][:-10] + f"\\userdata\\{this_acc}")
+            this_acc = str(commid_to_steamid(GetUID(account)))
+            try:
+                steam_path = readJson("settings/settings.json")["steam_path"][:-10]
+                os.makedirs(os.path.join(steam_path, "userdata", this_acc))
                 logList.addItem(f"\033[32m+ Папка настроек аккаунта {account} была создана!\033[0m")
                 logList.scrollToBottom()
-            else:
+            except:
                 logList.addItem(f"~ Аккаунт {account} уже имеет папку с настройками!")
                 logList.scrollToBottom()
         else:
