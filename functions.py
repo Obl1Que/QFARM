@@ -202,16 +202,13 @@ def GetSharedSecret(login):
 
 def ParceLogPass():
     accounts = {}
-    file = open('logpass.txt')
-
-    for account in file:
-        if account != '\n':
-            account_pair = account.split(':')
-            accounts[account_pair[0].lower()] = {'login': account_pair[0].lower(),
-                                                 'password': account_pair[1].replace('\n', '')}
-    file.close()
+    with open('logpass.txt', 'r') as file:
+        for account in file:
+            if account.strip():
+                account_pair = account.strip().split(':')
+                accounts[account_pair[0].lower()] = {'login': account_pair[0].lower(),
+                                                     'password': account_pair[1]}
     return accounts
-
 def CreateAccounts():
     accounts = ParceLogPass()
     for login in accounts:
