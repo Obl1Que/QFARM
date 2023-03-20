@@ -214,9 +214,8 @@ def CreateAccounts():
     for login in accounts:
         accounts[login]['shared_secret'] = GetSharedSecret(login)
 
-    file = open('accounts.json', 'w', encoding='utf-8')
-    file.write(json.dumps(accounts, indent=4))
-    file.close()
+    with open('accounts.json', 'w', encoding='utf-8') as file:
+        json.dump(accounts, file, indent=4)
 
 def readJson(path):
     file = open(os.path.abspath(path), encoding='utf-8')
