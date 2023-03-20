@@ -146,7 +146,7 @@ class SteamAccount():
             if self.will_connected == True:
                 logList.addItem(f"~ Аккаунт {self.login} будет подключен к {self.ip}")
                 logList.scrollToBottom()
-            logList.addItem(f"+ Аккаунт {self.login} успешно запущен!\n")
+            logList.addItem(f"+ Аккаунт {self.login} успешно запущен!")
             logList.scrollToBottom()
         except Exception as ex:
             if str(ex) == 'run program failed':
