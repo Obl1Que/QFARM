@@ -310,26 +310,9 @@ def CreateQFarmexec(logList):
         logList.scrollToBottom()
 
 def GetActualVersion():
-    url = "https://github.com/Obl1Que/QFARM/blob/master/README.md"
-
-    text = requests.get(url).text
-    soup = BeautifulSoup(text, 'html.parser')
-
+    soup = BeautifulSoup(requests.get("https://github.com/Obl1Que/QFARM/blob/master/README.md").text, 'html.parser')
     soup_v = soup.find_all('p')[0].get_text()
-
-    if readJson("settings/settings.json")["version"] == soup_v:
-        return [False]
-    else:
-        return [True, soup_v]
-
-def GetAccountID(userID):
-    url = f"https://steamid.pro/ru/lookup/{userID}"
-
-    text = requests.get(url).text
-    soup = BeautifulSoup(text, 'html.parser')
-
-    account_id = soup.find('img', class_ = "copy").attrs['data-clipboard-text']
-    return account_id
+    return [True, soup_v] if readJson("settings/settings.json")["version"] != soup_v else [False]
 
 def GetUID(login):
     dir_name = os.path.abspath("./maFiles")
