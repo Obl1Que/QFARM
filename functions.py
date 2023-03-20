@@ -52,26 +52,36 @@ class SteamAccount():
                 autoit.run(f'{readJson("settings/settings.json")["steam_path"]} '
                            f'-login {self.login} {self.password} '
                            f'-applaunch 730 '
+                           f'-console '
+                           f'-d3d9ex '
+                           f'+exec qfarm.cfg '
+                           f'+fps_max 30 '
                            f'-low '
-                           f'-nobrowser '
                            f'-nohltv '
-                           f'-novid '
+                           f'-nojoy '
+                           f'-nomouse '
                            f'-nosound '
-                           f'-window -w 640 -h 480 '
-                           f'+exec qfarm.cfg')
+                           f'-noubershader '
+                           f'-novid '
+                           f'-window -w 640 -h 480')
             else:
                 self.will_connected = True
                 self.ip = readJson("settings/settings.json")["server_log_pass"]
                 autoit.run(f'{readJson("settings/settings.json")["steam_path"]} '
                            f'-login {self.login} {self.password} '
                            f'-applaunch 730 '
-                           f'-low '
-                           f'-nobrowser '
-                           f'-nohltv '
-                           f'-novid '
-                           f'-nosound '
-                           f'-window -w 640 -h 480 '
+                           f'-console '
+                           f'-d3d9ex '
                            f'+exec qfarm.cfg '
+                           f'+fps_max 30 '
+                           f'-low '
+                           f'-nohltv '
+                           f'-nojoy '
+                           f'-nomouse '
+                           f'-nosound '
+                           f'-noubershader '
+                           f'-novid '
+                           f'-window -w 640 -h 480 '
                            f'+connect {self.ip}')
 
             if self.steam_lang == None:
