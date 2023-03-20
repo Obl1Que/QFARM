@@ -289,26 +289,22 @@ def NewSettings(logList):
 
 def CreateQFarmexec(logList):
     try:
-        cfg_path = readJson("settings/settings.json")["steam_path"][:-10] + r"\steamapps\common\Counter-Strike Global Offensive\csgo\cfg"
+        cfg_path = os.path.join(readJson("settings/settings.json")["csgo_path"], "csgo/cfg")
+        cfg_settings = open(os.path.abspath("settings/qfarm.cfg")).read()
         try:
-            exist_cfg = open(cfg_path + r"\qfarm.cfg")
-            exist_cfg_info = exist_cfg.read()
-            cfg_settings = open(os.path.abspath("settings/qfarm.cfg")).read()
-            exist_cfg.close()
+            exist_cfg_info = open(os.path.join(cfg_path, "qfarm.cfg")).read()
 
             if exist_cfg_info == cfg_settings:
-                logList.addItem("Файл qfarm.cfg уже существует!\n")
-                logList.scrollToBottom()
+                logList.addItem("Файл qfarm.cfg уже существует!")
             else:
-                logList.addItem("Удалите файл qfarm.cfg и попробуйте снова!\n")
-                logList.scrollToBottom()
-        except:
-            cfg_settings = open(os.path.abspath("settings/qfarm.cfg")).read()
-            cfg_file = open(cfg_path + r"\qfarm.cfg", "w")
+                os.remove(os.path.join(cfg_path, "qfarm.cfg"))
+                raise Exception("Удалите файл qfarm.cfg и попробуйте снова!")
+        except FileNotFoundError:
+            cfg_file = open(os.path.join(cfg_path, "qfarm.cfg"), "w")
             cfg_file.write(cfg_settings)
             cfg_file.close()
             logList.addItem("Файл qfarm.cfg создан!\n")
-            logList.scrollToBottom()
+        logList.scrollToBottom()
     except:
         logList.addItem("Путь до cfg не содержится в папке Steam!\n")
         logList.scrollToBottom()
