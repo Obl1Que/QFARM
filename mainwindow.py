@@ -365,7 +365,10 @@ class Ui_MainWindow(object):
     def clearF(self):
         self.clearButton.clicked.connect(lambda: self.clear())
     def clear(self):
-        autoit.run('pssuspend -r steamwebhelper')
-        autoit.run('pssuspend -r Steam')
-        autoit.run('pssuspend -r csgo')
-
+        if self.clearButton.isChecked() == True:
+            os.startfile('pssuspend.py')
+        else:
+            autoit.run('pssuspend -r steamwebhelper')
+            autoit.run('pssuspend -r Steam')
+            autoit.run('pssuspend -r csgo')
+            os.system('taskkill /im py.exe /f')
