@@ -21,3 +21,5 @@ fork create: qirieshka_clwn#3999 ; https://t.me/Qirieshka_clwn
 +game_mode 0 +mapgroup mg_custom +map empty_map +hostport 27040 ,
 
 мем редукт и сервер запускаються на кнопку запустить сервер.
+
+кто хочет поддержать вот трейд ссылка: https://steamcommunity.com/tradeoffer/new/?partner=1041049308&token=LugW92lo
