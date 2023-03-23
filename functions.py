@@ -7,6 +7,8 @@ import requests
 import py_win_keyboard_layout
 from bs4 import BeautifulSoup
 from steampy.guard import generate_one_time_code
+import win32gui
+import win32con
 
 class SteamAccount():
     def __init__(self, login, password, shared_secret, win_csgo_PID = None, win_steam_PID = None, status = None, posX = None, posY = None):
@@ -138,6 +140,9 @@ class SteamAccount():
                 autoit.win_activate('Counter-Strike: Global Offensive - Direct3D 9')
                 autoit.win_wait_active('Counter-Strike: Global Offensive - Direct3D 9')
                 autoit.win_set_title('Counter-Strike: Global Offensive - Direct3D 9', self.win_csgo_title)
+                time.sleep(2)
+                hwnd = win32gui.FindWindow(None, self.win_csgo_title)
+                win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
             time.sleep(1)
             self.MoveWindow(0, 0)
             self.win_csgo_PID = autoit.win_get_process(self.win_csgo_title)
@@ -209,6 +214,7 @@ def ParceLogPass():
                 accounts[account_pair[0].lower()] = {'login': account_pair[0].lower(),
                                                      'password': account_pair[1]}
     return accounts
+
 def CreateAccounts():
     accounts = ParceLogPass()
     for login in accounts:
@@ -235,11 +241,10 @@ def OnStart():
             except OSError:
                 pass
             to_remove.append(account)
-    for account in to_remove:
-        info.pop(account)
-    with open('launched_accounts.json', 'w', encoding='utf-8') as file:
-        json.dump(info, file, indent=4)
-
+            for account in to_remove:
+                info.pop(account)
+            with open('launched_accounts.json', 'w', encoding='utf-8') as file:
+                json.dump(info, file, indent=4)
 
 def OnStartPrintInfo():
     actual_version = readJson("settings/settings.json")["version"]
@@ -250,21 +255,21 @@ def OnStartPrintInfo():
             f'tg каналу @QFARMPANEL!\n\n'
             f''
             f'Что нового в этой версии панели?\n'
-            '- Новая версия панели 2.5.3T - Добавлено поле для пути CS:GO\n'
-            '- Баг-фикс\n'
-            '- Оптимизация метода CreateOptomisations\n'
-            '- Создание метода commid_to_steamid\n'
-            '- Оптимизация метода GetActualVersion\n'
-            '- Оптимизация метода CreateQFarmexec\n'
-            '- Оптимизация метода OnStart\n'
-            '- Оптимизация метода CreateAccounts\n'
-            '- Оптимизация метода ParceLogPass\n'
-            '- Оптимизация метода GetSharedSecret\n'
-            '- Увеличена задержка при вводе Guard-кода\n'
-            '- Добавлены новые параметры при запуске CS:GO\n'
-            '- Оптимизирован метод запуска оптимизации\n'
-            '- Добавлены некоторые параметры для оптимизации\n'
-            '- Добавлено поле для пути CS:GO\n'
+                        '- Новая версия панели 2.5.3T - Добавлено поле для пути CS:GO\n'
+            f'- Баг-фикс\n'
+            f'- Оптимизация метода CreateOptomisations\n'
+            f'- Создание метода commid_to_steamid\n'
+            f'- Оптимизация метода GetActualVersion\n'
+            f'- Оптимизация метода CreateQFarmexec\n'
+            f'- Оптимизация метода OnStart\n'
+            f'- Оптимизация метода CreateAccounts\n'
+            f'- Оптимизация метода ParceLogPass\n'
+            f'- Оптимизация метода GetSharedSecret\n'
+            f'- Увеличена задержка при вводе Guard-кода\n'
+            f'- Добавлены новые параметры при запуске CS:GO\n'
+            f'- Оптимизирован метод запуска оптимизации\n'
+            f'- Добавлены некоторые параметры для оптимизации\n'
+            f'- Добавлено поле для пути CS:GO\n'
             f'\n'
             f'Github: https://github.com/Obl1Que\n'
             f'Donate: https://steamcommunity.com/tradeoffer/new/?partner=242071350&token=_u728zwQ\n'
@@ -316,13 +321,14 @@ def CreateQFarmexec(logList):
             cfg_file.write(cfg_settings)
             cfg_file.close()
             logList.addItem("Файл qfarm.cfg создан!\n")
-        logList.scrollToBottom()
+            logList.scrollToBottom()
     except:
         logList.addItem("Путь до cfg не содержится в папке Steam!\n")
         logList.scrollToBottom()
 
 def GetActualVersion():
     soup = BeautifulSoup(requests.get("https://github.com/Obl1Que/QFARM/blob/master/README.md").text, 'html.parser')
+
     soup_v = soup.find_all('p')[0].get_text()
     return [True, soup_v] if readJson("settings/settings.json")["version"] != soup_v else [False]
 

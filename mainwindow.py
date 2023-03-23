@@ -2,7 +2,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDesktopWidget
 from functions import *
 from settingswindow import Ui_SettingsWindow
+from PyQt5.QtWidgets import *
 import threading
+import autoit
+import os
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -12,7 +15,7 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QtCore.QSize(800, 600))
         MainWindow.setMaximumSize(QtCore.QSize(800, 600))
         MainWindow.setStyleSheet("QMainWindow {"
-                                 "background-color: white;"
+                                 "background-color: dim-gray;"
                                  "}")
         self.MainWindow = MainWindow
 
@@ -21,15 +24,16 @@ class Ui_MainWindow(object):
                                          "border: 0 solid;"
                                          "border-radius: 8px;"
                                          "color: white;"
-                                         "font-size: 13px;"
+                                         "font-size: 11px;"
                                          "font-weight: bold;"
-                                         "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(178, 99, 252, 255), stop:0.5 rgba(251, 162, 213, 255), stop:1 rgba(182, 242, 221, 255));"
+                                         "background-color: rgba(79, 79, 79, 1);"
                                          "}"
                                          ".QPushButton:hover {"
                                          "font-size: 14px;"
                                          "}"
                                          ".QListWidget {"
-                                         "    background-color: qlineargradient(spread:reflect, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(178, 99, 252, 100), stop:0.5 rgba(251, 162, 213, 100), stop:1 rgba(182, 242, 221, 100));\n"
+                                         "    background-color: rgba(79, 79, 79, 1);\n"
+                                         "color: white;"
                                          "    border-radius: 8px}")
         self.centralwidget.setObjectName("centralwidget")
 
@@ -51,12 +55,12 @@ class Ui_MainWindow(object):
         self.windowsButton.setIconSize(QtCore.QSize(20, 20))
 
         self.checkAccountsButton = QtWidgets.QPushButton(self.centralwidget)
-        self.checkAccountsButton.setGeometry(QtCore.QRect(20, 20, 280, 41))
+        self.checkAccountsButton.setGeometry(QtCore.QRect(20, 20, 401, 41))
         self.checkAccountsButton.setStyleSheet("")
         self.checkAccountsButton.setObjectName("checkAccountsButton")
 
         self.allAccountsButton = QtWidgets.QPushButton(self.centralwidget)
-        self.allAccountsButton.setGeometry(QtCore.QRect(320, 20, 101, 41))
+        self.allAccountsButton.setGeometry(QtCore.QRect(430, 140, 140, 41))
         self.allAccountsButton.setStyleSheet("")
         self.allAccountsButton.setObjectName("allAccountsButton")
 
@@ -76,12 +80,32 @@ class Ui_MainWindow(object):
         self.startFarmButton.setObjectName("startFarm")
 
         self.accountsList = QtWidgets.QListWidget(self.centralwidget)
-        self.accountsList.setGeometry(QtCore.QRect(445, 21, 331, 281))
+        self.accountsList.setGeometry(QtCore.QRect(575, 21, 200, 281))
         self.accountsList.setObjectName("accountsList")
 
         self.logList = QtWidgets.QListWidget(self.centralwidget)
         self.logList.setGeometry(QtCore.QRect(25, 320, 751, 261))
         self.logList.setObjectName("logList")
+
+        self.eyeButton = QPushButton("Toggle", self.centralwidget)
+        self.eyeButton.setCheckable(True)
+        self.eyeButton.setGeometry(QtCore.QRect(430, 80, 140, 41))
+        self.eyeButton.setStyleSheet("")
+        self.eyeButton.setObjectName("eye")
+        self.eyeButton.clicked.connect(self.do_something)
+        self.eyeButton.setStyleSheet("font-size: 14px;")
+
+        self.batButton = QPushButton("Toggle", self.centralwidget)
+        self.batButton.setCheckable(True)
+        self.batButton.setGeometry(QtCore.QRect(430, 20, 140, 41))
+        self.batButton.setStyleSheet("")
+        self.batButton.setObjectName("bat")
+
+        self.clearButton = QPushButton("Toggle", self.centralwidget)
+        self.clearButton.setCheckable(True)
+        self.clearButton.setGeometry(QtCore.QRect(430, 200, 140, 41))
+        self.clearButton.setStyleSheet("")
+        self.clearButton.setObjectName("clear")
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
@@ -97,6 +121,10 @@ class Ui_MainWindow(object):
         self.goSettingsF()
         self.OptimiseF()
         self.chooseAllItems()
+        self.batF()
+        self.clearF()
+        self.blur_effect = QGraphicsBlurEffect()
+        self.accountsList.setGraphicsEffect(self.blur_effect)
 
         self.LogWrite(OnStartPrintInfo())
         self.itemsToLaunch = []
@@ -162,6 +190,10 @@ class Ui_MainWindow(object):
         self.addAccountsButton.setText(_translate("MainWindow", "ДОБАВИТЬ АККАУНТЫ"))
         self.addMaFilesButton.setText(_translate("MainWindow", "ДОБАВИТЬ MAFILE"))
         self.startFarmButton.setText(_translate("MainWindow", "НАЧАТЬ ФАРМ"))
+        self.batButton.setText(_translate("MainWindow", """ЗАПУСТИТЬ/ЗАКРЫТЬ
+        СЕРВЕР"""))
+        self.eyeButton.setText(_translate("MainWindow", "Blur"))
+        self.clearButton.setText(_translate("MainWindow", "suspend"))
 
     def addAccountsF(self):
         self.addAccountsButton.clicked.connect(lambda: self.addAccountsT())
@@ -314,3 +346,26 @@ class Ui_MainWindow(object):
         self.LogWrite("Оптимизация видеонастроек была запущена!")
         NewSettings(self.logList)
         self.opt_stat = False
+    def do_something(self):
+        if self.eyeButton.isChecked() == True:
+            self.blur_effect.setEnabled(False)
+        else:
+             self.blur_effect.setEnabled(True)
+
+    def batF(self):
+        self.batButton.clicked.connect(lambda: self.bat())
+    def bat(self):
+        if autoit.win_exists("qirieshka"):
+            os.system("taskkill /im srcds.exe /f")
+            os.system('taskkill /F /IM memreduct.exe')
+        else:
+            autoit.run(f'{readJson("settings/settings.json")["server_path"]} ')
+            autoit.run(f'{readJson("settings/settings.json")["memreduct_path"]} ')
+
+    def clearF(self):
+        self.clearButton.clicked.connect(lambda: self.clear())
+    def clear(self):
+        autoit.run('pssuspend -r steamwebhelper')
+        autoit.run('pssuspend -r Steam')
+        autoit.run('pssuspend -r csgo')
+
