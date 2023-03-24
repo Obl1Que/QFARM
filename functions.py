@@ -241,10 +241,10 @@ def OnStart():
             except OSError:
                 pass
             to_remove.append(account)
-            for account in to_remove:
-                info.pop(account)
-            with open('launched_accounts.json', 'w', encoding='utf-8') as file:
-                json.dump(info, file, indent=4)
+        for account in to_remove:
+            info.pop(account)
+        with open('launched_accounts.json', 'w', encoding='utf-8') as file:
+            json.dump(info, file, indent=4)
 
 def OnStartPrintInfo():
     actual_version = readJson("settings/settings.json")["version"]
@@ -321,7 +321,7 @@ def CreateQFarmexec(logList):
             cfg_file.write(cfg_settings)
             cfg_file.close()
             logList.addItem("Файл qfarm.cfg создан!\n")
-            logList.scrollToBottom()
+        logList.scrollToBottom()
     except:
         logList.addItem("Путь до cfg не содержится в папке Steam!\n")
         logList.scrollToBottom()
