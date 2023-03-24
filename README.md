@@ -5,7 +5,7 @@ v2.5.3T
 
 fork create: qirieshka_clwn#3999 ; https://t.me/Qirieshka_clwn
 
-добавлно:
+добавлено:
 
 блюр,
 
