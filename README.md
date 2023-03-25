@@ -15,10 +15,13 @@ fork create: qirieshka_clwn#3999 ; https://t.me/Qirieshka_clwn
 
 путь до сервера и путь до memreduct
 
-для того чтоб запускать сервер надо указать путь вместе с srds.exe и через пробел параметры запуска.
+для того чтоб запускать сервер надо указать путь до папки с сервером.
 
-пример: F:/server/steamapps/common/Counter-Strike Global Offensive Beta - Dedicated Server/srcds.exe -game csgo -console -usercon -nobots +game_type 0
-+game_mode 0 +mapgroup mg_custom +map empty_map +hostport 27040 ,
+пример: F:/server/steamapps/common/Counter-Strike Global Offensive Beta - Dedicated Server,
+
+и в отдельном пункте пораметры сервера
+
+пример: -game csgo -console -usercon -nobots +game_type 0 +game_mode 0 +mapgroup mg_custom +map empty_map +hostport 27040
 
 мем редукт и сервер запускаються на кнопку запустить сервер.
 
