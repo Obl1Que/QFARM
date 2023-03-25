@@ -19,7 +19,7 @@ fork create: qirieshka_clwn#3999 ; https://t.me/Qirieshka_clwn
 
 пример: F:/server/steamapps/common/Counter-Strike Global Offensive Beta - Dedicated Server,
 
-и в отдельном пункте пораметры сервера
+и в отдельном пункте параметры сервера
 
 пример: -game csgo -console -usercon -nobots +game_type 0 +game_mode 0 +mapgroup mg_custom +map empty_map +hostport 27040
 
