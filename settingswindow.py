@@ -7,9 +7,9 @@ import time
 class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
         SettingsWindow.setObjectName("SettingsWindow")
-        SettingsWindow.resize(700, 435)
-        SettingsWindow.setMinimumSize(QtCore.QSize(700, 435))
-        SettingsWindow.setMaximumSize(QtCore.QSize(700, 435))
+        SettingsWindow.resize(700, 495)
+        SettingsWindow.setMinimumSize(QtCore.QSize(700, 495))
+        SettingsWindow.setMaximumSize(QtCore.QSize(700, 495))
         SettingsWindow.setWindowIcon(QtGui.QIcon('img/icon.png'))
         SettingsWindow.setStyleSheet("QMainWindow {\n"
                                      "    background-color: dim-gray;\n"
@@ -87,6 +87,16 @@ class Ui_SettingsWindow(object):
         self.labelPathToServer.setAlignment(QtCore.Qt.AlignCenter)
         self.labelPathToServer.setObjectName("labelPathToServer")
 
+        self.linePathToServerparametrs = QtWidgets.QLineEdit(self.centralwidget)
+        self.linePathToServerparametrs.setGeometry(QtCore.QRect(230, 440, 451, 41))
+        self.linePathToServerparametrs.setText("")
+        self.linePathToServerparametrs.setObjectName("linePathToServerparametrs")
+
+        self.labelPathToServerparametrs = QtWidgets.QLabel(self.centralwidget)
+        self.labelPathToServerparametrs.setGeometry(QtCore.QRect(20, 440, 191, 41))
+        self.labelPathToServerparametrs.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelPathToServerparametrs.setObjectName("labelPathToServerparametrs")
+
         self.addServersButton = QtWidgets.QLabel(self.centralwidget)
         self.addServersButton.setGeometry(QtCore.QRect(20, 260, 191, 41))
         self.addServersButton.setAlignment(QtCore.Qt.AlignCenter)
@@ -131,6 +141,7 @@ class Ui_SettingsWindow(object):
         self.labelPathToSteam.setText(_translate("SettingsWindow", "ПУТЬ ДО STEAM:"))
         self.labelPathToCSGO.setText(_translate("SettingsWindow", "ПУТЬ ДО CSGO:"))
         self.labelPathToServer.setText(_translate("SettingsWindow", "ПУТЬ ДО СЕРВЕРА:"))
+        self.labelPathToServerparametrs.setText(_translate("SettingsWindow", "ПАРАМЕТРЫ СЕРВЕРА:"))
         self.labelPathToMemreduct.setText(_translate("SettingsWindow", "ПУТЬ ДО MEMREDUCT:"))
         self.addServersButton.setText(_translate("SettingsWindow", "ДОБАВИТЬ СЕРВЕР"))
         self.cfgRedactorButton.setText(_translate("SettingsWindow", "РЕДАКТИРОВАТЬ ФАЙЛ КОНФИГА"))
@@ -142,6 +153,7 @@ class Ui_SettingsWindow(object):
         info["steam_path"] = self.linePathToSteam.text()
         info["csgo_path"] = self.linePathToCSGO.text()
         info["server_path"] = self.linePathToServer.text()
+        info["server_parametrs"] = self.linePathToServerparametrs.text()
         info["server_log_pass"] = self.serverLabel.text()
         info["memreduct_path"] = self.linePathToMemreduct.text()
         file = open("settings/settings.json", "w", encoding="utf-8")
@@ -151,6 +163,7 @@ class Ui_SettingsWindow(object):
     def ChangePath(self):
         self.linePathToSteam.setText(readJson("settings/settings.json")["steam_path"])
         self.linePathToServer.setText(readJson("settings/settings.json")["server_path"])
+        self.linePathToServerparametrs.setText(readJson("settings/settings.json")["server_parametrs"])
         self.linePathToMemreduct.setText(readJson("settings/settings.json")["memreduct_path"])
         self.linePathToCSGO.setText(readJson("settings/settings.json")["csgo_path"])
         self.serverLabel.setText(readJson("settings/settings.json")["server_log_pass"])

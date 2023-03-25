@@ -6,6 +6,7 @@
     "steam_language": "",
     "win_w": 160,
     "win_h": 90,
-    "server_path": "",
-    "memreduct_path": ""
+    "server_path": "C:\\server\\steamapps\\common\\Counter-Strike Global Offensive Beta - Dedicated Server",
+    "memreduct_path": "C:\\Mem Reduct\\memreduct.exe",
+    "server_parametrs": "-game csgo -console -usercon -nobots +game_type 0 +game_mode 0 +mapgroup mg_custom +map empty_map +hostport 27040"
 }

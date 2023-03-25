@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import *
 import threading
 import autoit
 import os
+import re
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -355,12 +356,16 @@ class Ui_MainWindow(object):
     def batF(self):
         self.batButton.clicked.connect(lambda: self.bat())
     def bat(self):
-        if autoit.win_exists("qirieshka"):
+        with open(rf'{readJson("settings/settings.json")["server_path"]}' + '\csgo\cfg\server.cfg', encoding='utf-8') as f:
+            match = re.search(r'"(.+)"', f.read().split('\n')[0])
+            if match:
+                result = match.group(1)
+        if autoit.win_exists(result):
             os.system("taskkill /im srcds.exe /f")
             os.system('taskkill /F /IM memreduct.exe')
         else:
-            autoit.run(f'{readJson("settings/settings.json")["server_path"]} ')
-            autoit.run(f'{readJson("settings/settings.json")["memreduct_path"]} ')
+            autoit.run(rf'{readJson("settings/settings.json")["server_path"]}'+ '/srcds.exe ' + rf'{readJson("settings/settings.json")["server_parametrs"]}')
+            autoit.run(rf'{readJson("settings/settings.json")["memreduct_path"]} ')
 
     def clearF(self):
         self.clearButton.clicked.connect(lambda: self.clear())
