@@ -166,6 +166,7 @@ class SteamAccount():
         self.posX = posX
         self.posY = posY
         self.UpdateAccountsJSON()
+
     def UpdateAccountsJSON(self):
         info = readJson('launched_accounts.json')
         if self.status == 'Off':
@@ -241,10 +242,11 @@ def OnStart():
             except OSError:
                 pass
             to_remove.append(account)
-        for account in to_remove:
-            info.pop(account)
-        with open('launched_accounts.json', 'w', encoding='utf-8') as file:
-            json.dump(info, file, indent=4)
+    for account in to_remove:
+        info.pop(account)
+    with open('launched_accounts.json', 'w', encoding='utf-8') as file:
+        json.dump(info, file, indent=4)
+
 
 def OnStartPrintInfo():
     actual_version = readJson("settings/settings.json")["version"]

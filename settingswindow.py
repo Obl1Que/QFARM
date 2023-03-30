@@ -179,22 +179,4 @@ class Ui_SettingsWindow(object):
         self.cfgRedactorButton.clicked.connect(lambda: self.cfgRedactor())
     def cfgRedactor(self):
         if self.cfgRedactorButton.isChecked() == False:
-            autoit.run('pssuspend steamwebhelper')
-            n = 1
-            while n < 6:
-                self.suspend()
-                time.sleep(45)
-                self.unsuspend()
-                time.sleep(3)
-        else:
-            autoit.run('pssuspend -r steamwebhelper')
-            n = 7
-            self.unsuspend()
-
-    def suspend(self):
-        autoit.run('pssuspend Steam')
-        autoit.run('pssuspend csgo')
-
-    def unsuspend(self):
-        autoit.run('pssuspend -r Steam')
-        autoit.run('pssuspend -r csgo')
+            autoit.run('settings\qfarm.cfg')

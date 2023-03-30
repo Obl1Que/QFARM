@@ -10,7 +10,7 @@ import os
 
 
 
-def clear():
+def suspend():
     autoit.run('pssuspend steamwebhelper')
     data = readJson("launched_accounts.json")
     n = 1
@@ -24,8 +24,4 @@ def clear():
 
             autoit.run(f'pssuspend {data[key]["win_csgo_PID"]}')
             autoit.run(f'pssuspend {data[key]["win_steam_PID"]}')
-    else:
-        n = 7
-        autoit.run(f'pssuspend -r steam')
-        autoit.run(f'pssuspend -r csgo')
-clear()
+suspend()

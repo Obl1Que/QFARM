@@ -102,6 +102,12 @@ class Ui_MainWindow(object):
         self.batButton.setStyleSheet("")
         self.batButton.setObjectName("bat")
 
+        self.killButton = QPushButton("Toggle", self.centralwidget)
+        self.killButton.setCheckable(True)
+        self.killButton.setGeometry(QtCore.QRect(430, 260, 140, 41))
+        self.killButton.setStyleSheet("")
+        self.killButton.setObjectName("kill")
+
         self.clearButton = QPushButton("Toggle", self.centralwidget)
         self.clearButton.setCheckable(True)
         self.clearButton.setGeometry(QtCore.QRect(430, 200, 140, 41))
@@ -123,6 +129,7 @@ class Ui_MainWindow(object):
         self.OptimiseF()
         self.chooseAllItems()
         self.batF()
+        self.killa()
         self.clearF()
         self.blur_effect = QGraphicsBlurEffect()
         self.accountsList.setGraphicsEffect(self.blur_effect)
@@ -195,6 +202,7 @@ class Ui_MainWindow(object):
         СЕРВЕР"""))
         self.eyeButton.setText(_translate("MainWindow", "Blur"))
         self.clearButton.setText(_translate("MainWindow", "suspend"))
+        self.killButton.setText(_translate("MainWindow", "закрыть все"))
 
     def addAccountsF(self):
         self.addAccountsButton.clicked.connect(lambda: self.addAccountsT())
@@ -377,3 +385,16 @@ class Ui_MainWindow(object):
             autoit.run('pssuspend -r Steam')
             autoit.run('pssuspend -r csgo')
             os.system('taskkill /im py.exe /f')
+
+    def killa(self):
+        self.killButton.clicked.connect(lambda: self.kill())
+    def kill(self):
+        data = readJson("launched_accounts.json")
+        for key in data:
+            os.kill(data[key]["win_csgo_PID"], signal.SIGTERM)
+            os.kill(data[key]["win_steam_PID"], signal.SIGTERM)
+            data[key]["win_csgo_PID"] = 0
+            data[key]["win_steam_PID"] = 0
+            data[key]["status"] = 0
+        self.checkAccounts()
+
