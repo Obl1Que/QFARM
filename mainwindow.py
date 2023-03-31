@@ -432,6 +432,7 @@ class Ui_MainWindow(object):
             for key in data:
                 hwnd = win32gui.FindWindow(None, data[key]["win_csgo_title"])
                 win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+                autoit.shutdown(13)
 
 class MyThread(threading.Thread):
     def run(self):
