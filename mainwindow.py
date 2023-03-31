@@ -1,3 +1,5 @@
+import time
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDesktopWidget
 from functions import *
@@ -7,6 +9,12 @@ import threading
 import autoit
 import os
 import re
+import win32gui
+import win32con
+
+
+
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -85,7 +93,7 @@ class Ui_MainWindow(object):
         self.accountsList.setObjectName("accountsList")
 
         self.logList = QtWidgets.QListWidget(self.centralwidget)
-        self.logList.setGeometry(QtCore.QRect(25, 320, 751, 261))
+        self.logList.setGeometry(QtCore.QRect(25, 380, 751, 201))
         self.logList.setObjectName("logList")
 
         self.eyeButton = QPushButton("Toggle", self.centralwidget)
@@ -114,6 +122,12 @@ class Ui_MainWindow(object):
         self.clearButton.setStyleSheet("")
         self.clearButton.setObjectName("clear")
 
+        self.hideButton = QPushButton("Toggle", self.centralwidget)
+        self.hideButton.setCheckable(True)
+        self.hideButton.setGeometry(QtCore.QRect(20, 320, 141, 41))
+        self.hideButton.setStyleSheet("")
+        self.hideButton.setObjectName("hideButton")
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -130,6 +144,7 @@ class Ui_MainWindow(object):
         self.chooseAllItems()
         self.batF()
         self.killa()
+        self.hidea()
         self.clearF()
         self.blur_effect = QGraphicsBlurEffect()
         self.accountsList.setGraphicsEffect(self.blur_effect)
@@ -203,6 +218,7 @@ class Ui_MainWindow(object):
         self.eyeButton.setText(_translate("MainWindow", "Blur"))
         self.clearButton.setText(_translate("MainWindow", "suspend"))
         self.killButton.setText(_translate("MainWindow", "закрыть все"))
+        self.hideButton.setText(_translate("MainWindow", "hide/show окна"))
 
     def addAccountsF(self):
         self.addAccountsButton.clicked.connect(lambda: self.addAccountsT())
@@ -375,16 +391,20 @@ class Ui_MainWindow(object):
             autoit.run(rf'{readJson("settings/settings.json")["server_path"]}'+ '/srcds.exe ' + rf'{readJson("settings/settings.json")["server_parametrs"]}')
             autoit.run(rf'{readJson("settings/settings.json")["memreduct_path"]} ')
 
+
     def clearF(self):
         self.clearButton.clicked.connect(lambda: self.clear())
     def clear(self):
         if self.clearButton.isChecked() == True:
-            os.startfile('pssuspend.py')
+            global susp
+            susp = 1
+            t = MyThread()
+            t.start()
         else:
-            autoit.run('pssuspend -r steamwebhelper')
-            autoit.run('pssuspend -r Steam')
-            autoit.run('pssuspend -r csgo')
-            os.system('taskkill /im py.exe /f')
+            susp = 7
+
+
+
 
     def killa(self):
         self.killButton.clicked.connect(lambda: self.kill())
@@ -397,4 +417,37 @@ class Ui_MainWindow(object):
             data[key]["win_steam_PID"] = 0
             data[key]["status"] = 0
         self.checkAccounts()
+    def hidea(self):
+        self.hideButton.clicked.connect(lambda: self.hide())
 
+    def hide(self):
+        if self.hideButton.isChecked() == True:
+            data = readJson("launched_accounts.json")
+            for key in data:
+                time.sleep(1)
+                hwnd = win32gui.FindWindow(None, data[key]["win_csgo_title"])
+                win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
+        else:
+            data = readJson("launched_accounts.json") 
+            for key in data:
+                hwnd = win32gui.FindWindow(None, data[key]["win_csgo_title"])
+                win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+
+class MyThread(threading.Thread):
+    def run(self):
+        autoit.run('pssuspend steamwebhelper')
+        data = readJson("launched_accounts.json")
+        global susp
+        while susp < 6:
+
+            for key in data:
+                autoit.run(f'pssuspend -r {data[key]["win_csgo_PID"]}')
+                autoit.run(f'pssuspend -r {data[key]["win_steam_PID"]}')
+
+                time.sleep(1)
+
+                autoit.run(f'pssuspend {data[key]["win_csgo_PID"]}')
+                autoit.run(f'pssuspend {data[key]["win_steam_PID"]}')
+        autoit.run('pssuspend -r steamwebhelper')
+        autoit.run('pssuspend -r Steam')
+        autoit.run('pssuspend -r csgo')
