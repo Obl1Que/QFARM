@@ -11,6 +11,8 @@ import os
 import re
 import win32gui
 import win32con
+import itertools
+
 
 
 
@@ -440,14 +442,28 @@ class MyThread(threading.Thread):
         global susp
         while susp < 6:
 
-            for key in data:
-                autoit.run(f'pssuspend -r {data[key]["win_csgo_PID"]}')
-                autoit.run(f'pssuspend -r {data[key]["win_steam_PID"]}')
+            for i in range(0, len(data), 2):
+                key1 = list(data.keys())[i]
+                key2 = list(data.keys())[i + 1] if i + 1 < len(data) else None
+
+                autoit.run(f'pssuspend -r {data[key1]["win_csgo_PID"]}')
+                autoit.run(f'pssuspend -r {data[key1]["win_steam_PID"]}')
+
+                if key2:
+                    autoit.run(f'pssuspend -r {data[key2]["win_csgo_PID"]}')
+                    autoit.run(f'pssuspend -r {data[key2]["win_steam_PID"]}')
 
                 time.sleep(1)
 
-                autoit.run(f'pssuspend {data[key]["win_csgo_PID"]}')
-                autoit.run(f'pssuspend {data[key]["win_steam_PID"]}')
+                autoit.run(f'pssuspend {data[key1]["win_csgo_PID"]}')
+                autoit.run(f'pssuspend {data[key1]["win_steam_PID"]}')
+
+                if key2:
+                    autoit.run(f'pssuspend {data[key2]["win_csgo_PID"]}')
+                    autoit.run(f'pssuspend {data[key2]["win_steam_PID"]}')
+
+        time.sleep(1)
         autoit.run('pssuspend -r steamwebhelper')
         autoit.run('pssuspend -r Steam')
         autoit.run('pssuspend -r csgo')
+
