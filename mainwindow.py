@@ -405,9 +405,11 @@ class Ui_MainWindow(object):
             susp = 1
             t = MyThread()
             t.start()
+            self.clearButton.setStyleSheet("background-color: green")
         else:
             susp = 7
             susp2 = 500
+            self.clearButton.setStyleSheet("background-color: rgba(79, 79, 79, 1)")
 
 
 
@@ -538,10 +540,6 @@ class MyThread(threading.Thread):
                     ctypes.windll.kernel32.CloseHandle(process_handlest2)
                     print("sus-st2")
 
-
-
-                    data = readJson("launched_accounts.json")
-
         time.sleep(2)
         global susp2
         while susp2 > 10:
@@ -568,3 +566,4 @@ class MyThread(threading.Thread):
                 ctypes.windll.kernel32.CloseHandle(process_handlest)
                 susp2 -= 1
                 print(susp2)
+        sys.exit()
