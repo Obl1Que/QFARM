@@ -444,9 +444,15 @@ class Ui_MainWindow(object):
 class MyThread(threading.Thread):
     def run(self):
         data = readJson("launched_accounts.json")
+        
+
+
+
+
         global susp
         while susp < 6:
             for i in range(0, len(data), 2):
+                data = readJson("launched_accounts.json")
                 key1 = list(data.keys())[i]
                 key2 = list(data.keys())[i + 1] if i + 1 < len(data) else None
                 pidcs = (data[key1]["win_csgo_PID"])
@@ -472,6 +478,31 @@ class MyThread(threading.Thread):
                 ctypes.windll.kernel32.CloseHandle(process_handlest)
                 print("res-st1")
 
+                if key2:
+                    pidcs = (data[key1]["win_csgo_PID"])
+                    pidst = (data[key1]["win_steam_PID"])
+                    pidcs2 = (data[key2]["win_csgo_PID"])
+                    pidst2 = (data[key2]["win_steam_PID"])
+
+                    PROCESS_SUSPEND_RESUME2 = 0x0800
+                    process_handlecs2 = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUME2, False, pidcs2)
+
+                    if process_handlecs2 is None:
+                        print("Ошибка: не удалось получить дескриптор процесса.")
+                    else:
+                        ctypes.windll.ntdll.NtResumeProcess(process_handlecs2)
+                    ctypes.windll.kernel32.CloseHandle(process_handlecs2)
+                    print("res-cs2")
+
+                    PROCESS_SUSPEND_RESUMEst2 = 0x0800
+                    process_handlest2 = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUMEst2, False, pidst2)
+
+                    if process_handlest2 is None:
+                        print("Ошибка: не удалось получить дескриптор процесса.")
+                    else:
+                        ctypes.windll.ntdll.NtResumeProcess(process_handlest2)
+                    ctypes.windll.kernel32.CloseHandle(process_handlest2)
+                    print("res-st2")
 
                 time.sleep(1)
 
@@ -519,85 +550,28 @@ class MyThread(threading.Thread):
                     ctypes.windll.kernel32.CloseHandle(process_handlest2)
                     print("sus-st2")
 
-                    time.sleep(1)
 
-                    PROCESS_SUSPEND_RESUME = 0x0800
-                    process_handlecs = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUME, False, pidcs)
-
-                    if process_handlecs is None:
-                        print("Ошибка: не удалось получить дескриптор процесса.")
-                    else:
-                        ctypes.windll.ntdll.NtResumeProcess(process_handlecs)
-                    ctypes.windll.kernel32.CloseHandle(process_handlecs)
-                    print("res-cs1")
-
-                    PROCESS_SUSPEND_RESUMEst = 0x0800
-                    process_handlest = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUMEst, False, pidst)
-
-                    if process_handlest is None:
-                        print("Ошибка: не удалось получить дескриптор процесса.")
-                    else:
-                        ctypes.windll.ntdll.NtResumeProcess(process_handlest)
-                    ctypes.windll.kernel32.CloseHandle(process_handlest)
-                    print("res-st1")
-
-                    PROCESS_SUSPEND_RESUME2 = 0x0800
-                    process_handlecs2 = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUME2, False, pidcs2)
-
-                    if process_handlecs2 is None:
-                        print("Ошибка: не удалось получить дескриптор процесса.")
-                    else:
-                        ctypes.windll.ntdll.NtResumeProcess(process_handlecs2)
-                    ctypes.windll.kernel32.CloseHandle(process_handlecs2)
-                    print("res-cs2")
-
-                    if key2:
-                        pidcs2 = (data[key2]["win_csgo_PID"])
-                        pidst2 = (data[key2]["win_steam_PID"])
-
-                        PROCESS_SUSPEND_RESUME2 = 0x0800
-                        process_handlecs2 = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUME2, False, pidcs2)
-
-                        if process_handlecs2 is None:
-                            print("Ошибка: не удалось получить дескриптор процесса.")
-                        else:
-                            ctypes.windll.ntdll.NtSuspendProcess(process_handlecs2)
-                        ctypes.windll.kernel32.CloseHandle(process_handlecs2)
-                        print("sus-cs2")
-
-                        PROCESS_SUSPEND_RESUMEst2 = 0x0800
-                        process_handlest2 = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUMEst2, False, pidst2)
-
-                        if process_handlest2 is None:
-                            print("Ошибка: не удалось получить дескриптор процесса.")
-                        else:
-                            ctypes.windll.ntdll.NtSuspendProcess(process_handlest2)
-                        ctypes.windll.kernel32.CloseHandle(process_handlest2)
-                        print("sus-st2")
 
         time.sleep(2)
-        global susp2
-        while susp2 > 10:
-            for key in data:
 
-                pidcs = (data[key]["win_csgo_PID"])
-                pidst = (data[key]["win_steam_PID"])
-                PROCESS_SUSPEND_RESUME = 0x0800
-                process_handlecs = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUME, False, pidcs)
+        for key in data:
 
-                if process_handlecs is None:
-                    print("Ошибка: не удалось получить дескриптор процесса.")
-                else:
-                    ctypes.windll.ntdll.NtResumeProcess(process_handlecs)
-                ctypes.windll.kernel32.CloseHandle(process_handlecs)
+            pidcs = (data[key]["win_csgo_PID"])
+            pidst = (data[key]["win_steam_PID"])
+            PROCESS_SUSPEND_RESUME = 0x0800
+            process_handlecs = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUME, False, pidcs)
 
-                PROCESS_SUSPEND_RESUMEst = 0x0800
-                process_handlest = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUMEst, False, pidst)
+            if process_handlecs is None:
+                print("Ошибка: не удалось получить дескриптор процесса.")
+            else:
+                ctypes.windll.ntdll.NtResumeProcess(process_handlecs)
+            ctypes.windll.kernel32.CloseHandle(process_handlecs)
 
-                if process_handlest is None:
-                    print("Ошибка: не удалось получить дескриптор процесса.")
-                else:
-                    ctypes.windll.ntdll.NtResumeProcess(process_handlest)
-                ctypes.windll.kernel32.CloseHandle(process_handlest)
-                susp2 -= 1
-                print(susp2)
+            PROCESS_SUSPEND_RESUMEst = 0x0800
+            process_handlest = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUMEst, False, pidst)
+
+            if process_handlest is None:
+                print("Ошибка: не удалось получить дескриптор процесса.")
+            else:
+                ctypes.windll.ntdll.NtResumeProcess(process_handlest)
+            ctypes.windll.kernel32.CloseHandle(process_handlest)
