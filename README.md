@@ -24,6 +24,7 @@ fork create: qirieshka_clwn#3999 ; https://t.me/Qirieshka_clwn
 пример: -game csgo -console -usercon -nobots +game_type 0 +game_mode 0 +mapgroup mg_custom +map empty_map +hostport 27040
 
 пример настроек:
+
 ![image](https://user-images.githubusercontent.com/128681984/235702597-d23d6cf4-aadd-49e9-9d55-7cd40402d5fe.png)
 
 мем редукт и сервер запускаються на кнопку запустить сервер.
