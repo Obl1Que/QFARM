@@ -7,8 +7,6 @@ import requests
 import py_win_keyboard_layout
 from bs4 import BeautifulSoup
 from steampy.guard import generate_one_time_code
-import win32gui
-import win32con
 
 class SteamAccount():
     def __init__(self, login, password, shared_secret, win_csgo_PID = None, win_steam_PID = None, status = None, posX = None, posY = None):

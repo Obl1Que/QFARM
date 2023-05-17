@@ -132,6 +132,12 @@ class Ui_MainWindow(object):
         self.hideButton.setStyleSheet("")
         self.hideButton.setObjectName("hideButton")
 
+        self.MemButton = QPushButton("Toggle", self.centralwidget)
+        self.MemButton.setCheckable(True)
+        self.MemButton.setGeometry(QtCore.QRect(180, 320, 141, 41))
+        self.MemButton.setStyleSheet("")
+        self.MemButton.setObjectName("MemButton")
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -150,6 +156,7 @@ class Ui_MainWindow(object):
         self.killa()
         self.hidea()
         self.clearF()
+        self.MemF()
         self.blur_effect = QGraphicsBlurEffect()
         self.accountsList.setGraphicsEffect(self.blur_effect)
 
@@ -223,6 +230,8 @@ class Ui_MainWindow(object):
         self.clearButton.setText(_translate("MainWindow", "suspend"))
         self.killButton.setText(_translate("MainWindow", "закрыть все"))
         self.hideButton.setText(_translate("MainWindow", "hide/show окна"))
+        self.MemButton.setText(_translate("MainWindow", """ЗАПУСТИТЬ/ЗАКРЫТЬ
+        MEM Reduct"""))
 
     def addAccountsF(self):
         self.addAccountsButton.clicked.connect(lambda: self.addAccountsT())
@@ -390,10 +399,8 @@ class Ui_MainWindow(object):
                 result = match.group(1)
         if autoit.win_exists(result):
             os.system("taskkill /im srcds.exe /f")
-            os.system('taskkill /F /IM memreduct.exe')
         else:
             autoit.run(rf'{readJson("settings/settings.json")["server_path"]}'+ '/srcds.exe ' + rf'{readJson("settings/settings.json")["server_parametrs"]}')
-            autoit.run(rf'{readJson("settings/settings.json")["memreduct_path"]} ')
 
 
     def clearF(self):
@@ -429,22 +436,43 @@ class Ui_MainWindow(object):
         self.hideButton.clicked.connect(lambda: self.hide())
 
     def hide(self):
-        if self.hideButton.isChecked() == True:
-            data = readJson("launched_accounts.json")
-            for key in data:
-                time.sleep(1)
-                hwnd = win32gui.FindWindow(None, data[key]["win_csgo_title"])
-                win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
+        hideStatus = readJson("settings/settings.json")["hide-status"]
+        if hideStatus == "True":
+            global HIDE
+            HIDE = 4
+            t = My2Thread()
+            t.start()
+            hideStatus = "True"
+            with open("settings/settings.json", "r+") as f:
+                settings = json.load(f)
+                settings["hide-status"] = str(self.hideButton.isChecked())
+                f.seek(0)
+                json.dump(settings, f, indent=4)
+        elif hideStatus == "False":
+            HIDE = 1
+            hideStatus = "False"
+            with open("settings/settings.json", "r+") as f:
+                settings = json.load(f)
+                settings["hide-status"] = str(self.hideButton.isChecked())
+                f.seek(0)
+                json.dump(settings, f, indent=4)
+
+    def MemF(self):
+        self.MemButton.clicked.connect(lambda: self.Mem())
+
+    def Mem(self):
+        if self.MemButton.isChecked() == True:
+            autoit.run(rf'{readJson("settings/settings.json")["memreduct_path"]} ')
+            self.MemButton.setStyleSheet("background-color: green")
         else:
-            data = readJson("launched_accounts.json") 
-            for key in data:
-                hwnd = win32gui.FindWindow(None, data[key]["win_csgo_title"])
-                win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+            os.system('taskkill /F /IM memreduct.exe')
+            self.MemButton.setStyleSheet("background-color: rgba(79, 79, 79, 1)")
+
 
 class MyThread(threading.Thread):
     def run(self):
         data = readJson("launched_accounts.json")
-        
+
 
 
 
@@ -466,7 +494,8 @@ class MyThread(threading.Thread):
                 else:
                     ctypes.windll.ntdll.NtResumeProcess(process_handlecs)
                 ctypes.windll.kernel32.CloseHandle(process_handlecs)
-                print("res-cs1")
+                #print("res-cs1")
+
 
                 PROCESS_SUSPEND_RESUMEst = 0x0800
                 process_handlest = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUMEst, False, pidst)
@@ -476,13 +505,16 @@ class MyThread(threading.Thread):
                 else:
                     ctypes.windll.ntdll.NtResumeProcess(process_handlest)
                 ctypes.windll.kernel32.CloseHandle(process_handlest)
-                print("res-st1")
+                #print("res-st1")
+
 
                 if key2:
+                    data = readJson("launched_accounts.json")
                     pidcs = (data[key1]["win_csgo_PID"])
                     pidst = (data[key1]["win_steam_PID"])
                     pidcs2 = (data[key2]["win_csgo_PID"])
                     pidst2 = (data[key2]["win_steam_PID"])
+
 
                     PROCESS_SUSPEND_RESUME2 = 0x0800
                     process_handlecs2 = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUME2, False, pidcs2)
@@ -492,7 +524,7 @@ class MyThread(threading.Thread):
                     else:
                         ctypes.windll.ntdll.NtResumeProcess(process_handlecs2)
                     ctypes.windll.kernel32.CloseHandle(process_handlecs2)
-                    print("res-cs2")
+                    #print("res-cs2")
 
                     PROCESS_SUSPEND_RESUMEst2 = 0x0800
                     process_handlest2 = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUMEst2, False, pidst2)
@@ -502,7 +534,7 @@ class MyThread(threading.Thread):
                     else:
                         ctypes.windll.ntdll.NtResumeProcess(process_handlest2)
                     ctypes.windll.kernel32.CloseHandle(process_handlest2)
-                    print("res-st2")
+                    #print("res-st2")
 
                 time.sleep(1)
 
@@ -514,7 +546,7 @@ class MyThread(threading.Thread):
                 else:
                     ctypes.windll.ntdll.NtSuspendProcess(process_handlecs)
                 ctypes.windll.kernel32.CloseHandle(process_handlecs)
-                print("sus-cs1")
+                #print("sus-cs1")
 
                 PROCESS_SUSPEND_RESUMEst = 0x0800
                 process_handlest = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUMEst, False, pidst)
@@ -524,9 +556,10 @@ class MyThread(threading.Thread):
                 else:
                     ctypes.windll.ntdll.NtSuspendProcess(process_handlest)
                 ctypes.windll.kernel32.CloseHandle(process_handlest)
-                print("sus-st1")
+                #print("sus-st1")
 
                 if key2:
+                    data = readJson("launched_accounts.json")
                     pidcs2 = (data[key2]["win_csgo_PID"])
                     pidst2 = (data[key2]["win_steam_PID"])
 
@@ -538,7 +571,7 @@ class MyThread(threading.Thread):
                     else:
                         ctypes.windll.ntdll.NtSuspendProcess(process_handlecs2)
                     ctypes.windll.kernel32.CloseHandle(process_handlecs2)
-                    print("sus-cs2")
+                    #print("sus-cs2")
 
                     PROCESS_SUSPEND_RESUMEst2 = 0x0800
                     process_handlest2 = ctypes.windll.kernel32.OpenProcess(PROCESS_SUSPEND_RESUMEst2, False, pidst2)
@@ -548,14 +581,14 @@ class MyThread(threading.Thread):
                     else:
                         ctypes.windll.ntdll.NtSuspendProcess(process_handlest2)
                     ctypes.windll.kernel32.CloseHandle(process_handlest2)
-                    print("sus-st2")
+                    #print("sus-st2")
 
 
 
         time.sleep(2)
 
         for key in data:
-
+            data = readJson("launched_accounts.json")
             pidcs = (data[key]["win_csgo_PID"])
             pidst = (data[key]["win_steam_PID"])
             PROCESS_SUSPEND_RESUME = 0x0800
@@ -575,3 +608,17 @@ class MyThread(threading.Thread):
             else:
                 ctypes.windll.ntdll.NtResumeProcess(process_handlest)
             ctypes.windll.kernel32.CloseHandle(process_handlest)
+
+class My2Thread(threading.Thread):
+    def run(self):
+        if HIDE >= 2:
+            data = readJson("launched_accounts.json")
+            for key in data:
+                time.sleep(1)
+                hwnd = win32gui.FindWindow(None, data[key]["win_csgo_title"])
+                win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
+        else:
+            data = readJson("launched_accounts.json")
+            for key in data:
+                hwnd = win32gui.FindWindow(None, data[key]["win_csgo_title"])
+                win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
