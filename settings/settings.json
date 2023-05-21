@@ -8,5 +8,6 @@
     "win_h": 90,
     "server_path": "",
     "memreduct_path": "",
-    "server_parametrs": ""
+    "server_parametrs": "",
+    "hide-status": "False"
 }
